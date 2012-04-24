@@ -44,14 +44,14 @@ class HandlerBase(ManagerBase):
 class TestLoggedInHandler(HandlerBase, unittest.TestCase):
 
     def _get_handler(self, params=None, post=None, context=MockFactory()):
-        from dashboard.views.handlers import LoggedInHandler
+        from bartervegastech.views.handlers import LoggedInHandler
         request = self._get_logged_in_request(params=params, post=post)
         #token = request.session.new_csrf_token()
         #request.POST['_csrf'] = token
         return LoggedInHandler(context, request)
 
     def test_constructor_not_logged_in(self):
-        from dashboard.views.handlers import LoggedInHandler
+        from bartervegastech.views.handlers import LoggedInHandler
         request = self._get_request()
         context = testing.DummyResource()
         self.assertRaises(HTTPFound, LoggedInHandler, context, request)
@@ -116,7 +116,7 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         self.config.set_session_factory(session_factory)
 
     def test_login_view_success(self):
-        from dashboard.dbmodels.dashdb import UserFactory
+        from bartervegastech.dbmodels.barterdb import UserFactory
         handler = self._get_handler(params=self._get_params(),
                                     path='/users/login',
                                     context=UserFactory())
@@ -124,8 +124,8 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         assert (self.request.session['logged_in'])[0] == 1
 
     def test_login_view_bad_user(self):
-        from dashboard.views.handlers import UserAccountHandler
-        from dashboard.dbmodels.dashdb import UserFactory
+        from bartervegastech.views.handlers import UserAccountHandler
+        from bartervegastech.dbmodels.barterdb import UserFactory
 
         params = self._get_params(username=u'foo')
         request = self._get_request(params=params, path='/users/login')
@@ -138,18 +138,19 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         self.assertEquals(response['password'], params['password'])
 
     def test_login_view_assertion_error(self):
-        from dashboard.views.handlers import UserAccountHandler
-        from dashboard.dbmodels.dashdb import UserFactory
+        '''Doesn't actually throw the assertion error'''
+        from bartervegastech.views.handlers import UserAccountHandler
+        from bartervegastech.dbmodels.barterdb import UserFactory
 
-        params = self._get_params(username=u'')
-        request = self._get_request(path='/users/login')
+        params = self._get_params(username=u'', password=None)
+        request = self._get_request(params=params, path='/users/login')
         context = UserFactory()
         handler = UserAccountHandler(context, request)
         response = handler.login()
         self.assertEquals(request.session.get('logged_in'), None)
         self.assertEquals(response['username'], '')
-        self.assertEquals(response['password'], '')
-        self.assertEquals(response["message"], "Login failed.")
+        self.assertEquals(response['password'], None)
+        self.assertEquals(response["message"], "Login failed")
         
 
     def test_logout(self):
@@ -158,8 +159,8 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         self.assertEquals(self.request.session.get('logged_in'), None)
 
     def test_list_users(self):
-        from dashboard.views.handlers import UserAccountHandler
-        from dashboard.dbmodels.dashdb import UserFactory
+        from bartervegastech.views.handlers import UserAccountHandler
+        from bartervegastech.dbmodels.barterdb import UserFactory
         request = self._get_logged_in_request()
         context = UserFactory()
         handler = UserAccountHandler(context, request)
@@ -222,11 +223,11 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
                 post=post,
                 **kw
                 )
-        from dashboard.views.handlers import UserAccountHandler
+        from bartervegastech.views.handlers import UserAccountHandler
         return UserAccountHandler(context, self.request)
 
     def _get_logged_in_handler(self):
-        from dashboard.views.handlers import UserAccountHandler
+        from bartervegastech.views.handlers import UserAccountHandler
         self.request = self._get_logged_in_request()
         context = testing.DummyResource()
         return UserAccountHandler(context, self.request)

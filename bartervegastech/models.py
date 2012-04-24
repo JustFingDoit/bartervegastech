@@ -18,7 +18,7 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base1 = declarative_base()
 #metadata1 = MetaData()
 #metadata2 = MetaData()
-from dashboard.dbmodels.dashdb import UserFactory
+from bartervegastech.dbmodels.barterdb import UserFactory
 logger = logging.getLogger(__name__)
 """class MyModel(Base2):
     __tablename__ = 'models'
@@ -62,7 +62,7 @@ def populate():
     factory.create_user("administrator", "delicious")
 
 def initialize_sql(engines, test=False):
-    from dashboard.dbmodels import dashdb
+    from bartervegastech.dbmodels import barterdb
     DBSession.configure(bind=engines[0])
     Base1.metadata.bind = engines[0]
     if test:

@@ -9,10 +9,10 @@ from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
 
-#from dashboard.dbmodels.dashdb import get_player_ids, \
+#from bartervegastech.dbmodels.barterdb import get_player_ids, \
 #        get_poker_player_by_id
-from dashboard.dbmodels.dashdb import UserFactory
-#from dashboard.dbmodels.shirtsbyme import 
+from bartervegastech.dbmodels.barterdb import UserFactory
+#from bartervegastech.dbmodels.shirtsbyme import 
 
 from formencode import Schema
 from formencode import validators
@@ -81,7 +81,7 @@ class UserAccountHandler(LoggedInHandler):
         '''
             Log the user in, or return a failed message
         '''
-        #from dashboard.dbmodels.dashdb import verify_user, get_user_id
+        #from bartervegastech.dbmodels.barterdb import verify_user, get_user_id
         self.log.debug('in login view')
         username = ''
         password = ''
@@ -89,7 +89,6 @@ class UserAccountHandler(LoggedInHandler):
         if 'login_button' in self.request.params:
             username = self.request.params.get('username')
             password = self.request.params.get('password')
-            print "\n\nAAAAAAAAAAAAA"
             try:           
                 if self.context.verify_user(username, password):
                     self.request.session['logged_in'] = self.context.get_user_id(username)
@@ -101,15 +100,6 @@ class UserAccountHandler(LoggedInHandler):
                 print "\n\nBBBBBBBBBBB"
                 self.log.debug("Login failed")
                 message = "Login failed."
-            print "\n\nCCCCCCCCCCC"    
-            '''
-            if verify_user(username, password):
-                self.request.session['logged_in'] = get_user_id(username)
-                self.log.debug('login succeeded')
-                return HTTPFound(location = "/")
-            else:
-                self.log.debug('Login failed.')
-                message = "Login failed."'''
         self.log.debug('login view returning')
         return {'username':username, 'password':password, 'message':message}
 
@@ -127,7 +117,7 @@ class UserAccountHandler(LoggedInHandler):
         '''
             return a list of all the users.
         '''
-        #from dashboard.dbmodels.dashdb import list_users
+        #from bartervegastech.dbmodels.barterdb import list_users
         
         factory = UserFactory()
         return {'users': factory.list_users()}
