@@ -48,7 +48,7 @@ setup(name='BarterVegasTech',
       install_requires = requires,
       entry_points = """\
       [paste.app_factory]
-      main = dashboard:main
+      main = bartervegastech:main
       """,
       paster_plugins=['pyramid'],
       )

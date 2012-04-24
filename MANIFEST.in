@@ -1,2 +1,2 @@
 include *.txt *.ini *.cfg *.rst
-recursive-include dashboard *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include bartervegastech *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
