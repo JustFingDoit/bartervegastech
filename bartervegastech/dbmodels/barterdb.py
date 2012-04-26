@@ -120,7 +120,53 @@ class UserAccount(Base1, BaseObject):
         """
         return self.pwd_context.verify(password, self.password())
 
-                    
+
+class OfferWant(Base1, BaseObject):
+    __tablename__ = 'offerswants'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('USER_ACCOUNT.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'))
+    offerwant = Column(Text)
+    description = Column(Text)
+    status = Column(Integer)
+    
+    def __init__(self, user_id, category_id, offerwant, description)
+        self.user_id = user_id
+        self.category_id = category_id
+        self.offerwant = offerwant
+        self.description = description
+        self.status = 0
+
+class Category(Base1, BaseObject):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True)
+    category = Column(Text)
+
+    def __init__(self, category):
+        self.category = category
+        
+class Listing(Base1, BaseObject):
+    __tablename__ = 'listings'
+    id = Column(Integer, primary_key=True)
+    created_on = Column(DateTime)
+    offerwant = Column(Integer)
+    user_id = Column(Integer)
+
+    def __init__(self, offerwant, user_id):
+        self.created_on = datetime.datetime.now()    
+        self.offerwant = offerwant
+        self.user_id = user_id
+        
+class ListingMap(Base1, BaseObject):
+    __tablename__ = 'listingsmap'
+    id = Column(Integer, primary_key=True)
+    listing_id = Column(Integer, ForeignKey('listings.id'))
+    offerwant_id = Column(Integer, ForeignKey('offerswants.id'))
+    
+    def __init__(self, listing_id, offerwant_id):
+        self.listing_id = listing_id
+        self.offerwant_id = offerwant_id
+
     
 class BaseFactory(object):
     '''
@@ -240,4 +286,58 @@ class UserFactory(BaseFactory):
             return None
         return userid
 
+class OfferWantFactory(BaseFactory):
+    '''
+        Factory for offers and wants
+    '''
+    def __init__(self):
+        """Initialize factory"""
+        BaseFactory.__init__(self, OfferWant)
 
+    def create_offer(self, category_id, offer):
+        offer = OfferWant(user_id, category_id, "offer", offer)
+        return self.add(offer)
+    
+    def create_want(self, category, want):
+        want = OfferWant(user_id, category_id, "want", want)
+        return self.add(want)
+        
+        
+class CategoryFactory(BaseFactory):
+    '''
+        Factory for categories
+    '''
+    def __init__(self):
+        """Initialize factory"""
+        BaseFactory.__init__(self, Category)
+    
+    def create_category(self, category):
+        cat = Category(category)
+        return self.add(cat)
+        
+    def get_by_category(self, name):
+        '''
+            Get the category by name
+        '''
+        return self.filter_by(category=name).scalar()
+        
+class ListingFactory(BaseFactory):
+    '''
+        Factory for listings
+    '''
+    def __init__(self):
+        """Initialize factory"""
+        BaseFactory.__init__(self, Listing)
+    
+    def get_listings_by_type(offerwant):
+        '''
+            Figure out all the listings of the specific type
+            Then get all the details for that listing
+        '''
+        listings = self.filter_by(offerwant=offerwant).all()
+        for each in listings:
+            listing = session.query(ListingMap).filter_by(id=each.id).scalar()
+            
+    
+    
+    def get_

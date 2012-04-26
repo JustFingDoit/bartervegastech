@@ -1,0 +1,894 @@
+/* HireVegasTech.com Main Stylesheet */
+
+body{
+	background: #2e2e2e url('/images/bg-dark.jpg') repeat;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 13px;
+	-webkit-font-smoothing: antialiased;
+	line-height: 1.8em;
+}
+
+a{
+	font-family: 'Open Sans', sans-serif;
+}
+
+#main{
+	background-color: #f3f3f3;
+	margin: 0;
+	padding: 2em 1em;
+	border-top: 1px solid #ffffff;
+}
+
+#main-alert{
+	background-color: #dddddd;
+	margin: 0;
+	padding: 1em 1em 0.2em 1em;
+	border-top: 1px solid #ffffff;
+}
+
+strong.blue{
+	color: #0082e0;
+}
+
+strong.red{
+	color: #f55b37;
+}
+
+.hide{
+	display: none !important;
+}
+
+#login-form-submit{
+	text-align: right;
+}
+
+#login-form-submit button{
+	float: right;
+}
+
+label.error{
+	color: #C00000 !important;
+}
+
+#login-modal span.label{
+	margin-bottom: 1.0em;
+	display: inline-block;
+}
+
+.req{
+	color: #ff0000;
+}
+
+#login-form-pass-recover{
+	display: none;
+}
+
+#pw-recover-form-submit{
+	text-align: right;
+	float: right;
+}
+
+
+/* Nav Bar */
+#navbar{
+	margin: 0;
+	padding: 0;
+	border-bottom: 4px solid #0082e0;
+	height: 70px;
+	max-height: 70px;
+	line-height: 70px;
+	color: #cccccc;
+	position: relative;
+}
+
+#navbar-links{
+	text-align: right;
+}
+
+#navbar-links ul li{
+	display: inline-block; 
+	margin-left: 2.3em;
+	margin-right: 0.2em;
+}
+
+#navbar-links ul li a{
+	font-family: 'Open Sans', sans-serif;
+	color: #cccccc;
+	text-shadow: 1px 1px 0 #000000;
+	font-weight: 400;
+}
+
+#navbar-links ul li a:hover{
+	color: #37abff;
+	cursor: pointer;
+}
+
+#navbar-links ul li a#current{
+	color: #ffffff;
+	font-weight: 800;
+}
+
+#logo{
+	margin: 5px 0 0 0;
+	z-index: 101;
+}
+
+#logo-mobile{
+	margin: 1em 0.5em 0 0.5em;
+	z-index: 101;
+}
+
+#nav-mobile-btn{
+	width: 2em;
+	margin: 1.8em 1em 0 2em;
+	float: right;
+}
+
+#navbar-login-btn{
+	text-shadow: none !important;
+	color: #ffffff !important;
+	font-weight: 700 !important;
+	text-shadow: 0 -1px 1px hsla(0, 0%, 0%, 0.28) !important;
+}
+
+
+/* Footer */
+footer{
+	margin: 0;
+	padding: 2em 0;
+	color: #d5d5d5;
+	line-height: 2em;
+}
+
+#footer-left a{
+	color: #ffffff;
+	font-weight: 700;
+}
+
+#footer-left a:hover{
+	color: #37abff;
+}
+
+#footer-center{
+	text-align: center;
+}
+
+#footer-right{
+	text-align: right;
+}
+
+#footer-center ul li{
+	display: inline-block;
+	margin: 0 1em;
+}
+
+#footer-center ul li a{
+	text-shadow: 1px 1px 0 #000000;
+	font-weight: 400;
+}
+
+#footer-center ul li a:hover{
+	color: #37abff;
+	cursor: pointer;
+}
+
+#footer-support-logos{
+	position: relative;
+}
+
+#footer-support-logos span{
+	display: inline-block;
+	height: 35px;
+	background-image: url('/images/footer-logo-sprite.png');
+	background-repeat: no-repeat;
+}
+
+#footer-support-logos span a{
+	width: 100%;
+	height: 100%;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+#footer-humanstxt{
+	width: 100px;
+	background-position: 0 0;
+}
+
+#footer-humanstxt:hover{
+	background-position: 0 -35px;
+	cursor: pointer;
+}
+
+#footer-html5{
+	width: 32px;
+	background-position: -100px 0;
+}
+
+#footer-html5:hover{
+	background-position: -100px -35px;
+	cursor: pointer;
+}
+
+footer a.has-tip{
+	border-bottom: none;
+}
+
+footer a.has-tip:hover{
+	cursor: pointer;
+}
+
+#footer-mobile{
+	text-align: center;
+}
+
+#footer-mobile a{
+	font-weight: 700;
+	color: #ffffff;
+}
+
+#nav-mobile-btn-footer{
+	width: 2em;
+	margin: 0 auto;
+}
+
+#copyright-mobile{
+	margin-top: 2em;
+}
+
+#footer-mobile-top-btn{
+	color: #333333 !important;
+	font-weight: 700 !important;
+	margin: 1.5em 3.5em 0 3.5em;
+}
+
+
+/* Home Page */
+#home-topper{
+	background: #949494 url('/images/bg-lasvegas-strip.jpg') top center no-repeat;
+	padding: 2.1em 1em 1.9em 1em;
+	border-bottom: 1px solid #777777;
+	line-height: 2.5em;
+}
+
+#home-topper span{
+	font-size: 1.5em;
+	padding: 0.5em;
+	font-weight: 300;
+	color: #000000;
+	background-color: #ffffff;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+
+#home-topper span strong{
+	font-weight: 800;
+}
+
+#topper-learn-more{
+	margin-left: 1em;
+	font-size: 0.6em;
+	font-weight: 700;
+	padding: 0em 0.6em;
+	display: inline-block;
+	background-color: #efefef;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	color: #0082e0;
+}
+
+#topper-learn-more:hover{
+	cursor: pointer;
+	background-color: #37abff;
+	color: #ffffff;
+}
+
+#sidebar-box{
+	background: none;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding: 0 !important;
+	margin: 0;
+	overflow: hidden;
+	border-bottom: 1px dashed #cccccc;
+	position: relative;
+}
+
+#sidebar h5{
+	font-size: 1.2em;
+	color: #555555;
+	font-weight: 700;
+	margin-bottom: 0;
+}
+
+#twitter-feed-iframe{
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+	display: inline-block;
+}
+
+#sidebar-box ul{
+	margin-bottom: 0;
+}
+
+#feed-bottom-fade{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 11;
+}
+
+#home-post-job-btn, #home-login-btn{
+	display: block;
+	width: 100%;
+	text-align: center;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin: 0;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+
+#home-post-job-btn{
+	background-color: #37a7f5;
+	color: #ffffff;
+	font-weight: 700;
+	text-shadow: -1px -1px 0 #0f75bc;
+}
+
+#home-login-btn{
+	background-color: #37a7f5;
+	color: #ffffff;
+	font-weight: 700;
+	text-shadow: -1px -1px 0 #0f75bc;
+}
+
+#home-post-job-btn:hover, #home-login-btn:hover{
+	background-color: #9fc636;
+	cursor: pointer;
+	text-shadow: -1px -1px 0 #7a9e18;
+}
+
+#sponsor-notice{
+	text-align: right;
+	margin: 1.5em 0 1.5em 1.5em;
+	color: #888888;
+}
+
+#sponsor-notice p{
+	line-height: 1.5em;
+}
+
+#sponsor-notice p a{
+	color: #333333;
+	font-size: 1em;
+	font-weight: 400;
+}
+
+#sponsor-notice p a:hover{
+	cursor: pointer;
+	color: #37a7f5;
+}
+
+.twitter-feed{
+	height: 420px;
+	padding: 0;
+	margin: 0;
+}
+
+.list-row .category, .list-row .position{
+	text-transform: capitalize;
+}
+
+
+/* About */
+#about-topper{
+	background: #949494 url('/images/vegas-strip-bg.jpg') top center no-repeat;
+	padding: 2.1em 1em 1.9em 1em;
+	border-bottom: 1px solid #d6d6d6;
+	line-height: 2.5em;
+	border-bottom: 1px solid #777777;
+}
+
+#about-feature{
+	text-align: right;
+	margin: 0;
+	padding: 0;
+}
+
+#about-topper-quote{
+	display: inline-block;
+	color: #f55b37;
+	font-weight: 800;
+	font-size: 2.6em;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	padding: 0.5em 0.6em;
+	margin: 0.7em 0 0 0;
+}
+
+#about-topper-credit{
+	display: inline-block;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	font-size: 1.3em;
+	padding: 0.5em 0.6em;
+	margin: 0 0 0.7em 0;
+	color: #555555;
+}
+
+#about-topper-quote-mobile{
+	text-align: left;
+	display: inline-block;
+	color: #f55b37;
+	font-weight: 800;
+	font-size: 1.7em;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	padding: 0.3em 0.4em;
+	margin: 0.7em 0 0 0;
+	line-height: 1.4em;
+}
+
+#about-topper-credit-mobile{
+	text-align: left;
+	line-height: 1.2em;
+	display: inline-block;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	font-size: 1.0em;
+	padding: 0.3em 0.4em 0.8em 0.6em;
+	margin: 0 0 0.8em 0;
+	color: #555555;
+}
+
+#about-topper-credit a.article{
+	font-style: italic;
+	color: #0082e0;
+}
+
+#about-topper-credit a.article:hover, a#gigaom-link:hover{
+	color: #37abff;
+}
+
+a#gigaom-link{
+	color: #222222;
+}
+
+#about-main p.big{
+	font-size: 2.0em;
+	line-height: 1.7em;
+	font-weight: 300;
+}
+
+#about-side h2{
+	color: #2e2e2e;
+	font-weight: 700;
+	font-size: 1.2em;
+}
+
+#about-side h4{
+	color: #0082e0;
+	font-weight: 700;
+	font-size: 1.1em;
+}
+
+#about-side h4 a{
+	color: #f55b37;
+	font-weight: 400;
+	font-size: 0.9em;
+}
+
+#about-side h4 a:hover{
+	cursor: pointer;
+	font-weight: 700;
+}
+
+#about-side ul{
+	border-top: 1px dashed #cccccc;
+}
+
+#about-side ul li{
+	margin: 0;
+	padding: 1.8em 0 0.8em 0;
+	border-bottom: 1px dashed #cccccc;
+}
+
+#about-side ul li p{
+	color: #5a5a5a;
+	font-size: 1em;
+	line-height: 1.6em;
+}
+
+#about-side ul li p a{
+	color: #4a4a4a;
+	font-weight: 300;
+}
+
+#about-side ul li p a:hover{
+	cursor: pointer;
+	color: #0082e0;
+}
+
+#vt-hash-link{
+	color: #0082e0;
+}
+
+#vt-hash-link:hover{
+	cursor: pointer;
+	color: #2a9ef2;
+}
+
+p#post-notice{
+	margin: 2em 0;
+	color: #666666;
+}
+
+
+/* users Page */
+#users-topper{
+	background: #949494 url('/images/freemont-st-bg.jpg') top center no-repeat;
+	padding: 2.1em 1em 1.9em 1em;
+	border-bottom: 1px solid #d6d6d6;
+	line-height: 2.5em;
+	border-bottom: 1px solid #777777;
+}
+
+#users-feature{
+	margin: 0;
+	padding: 0;
+}
+
+#users-feature-line{
+	color: #4c4c4c;
+	font-weight: 300;
+	font-size: 1.9em;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	padding: 0.2em 0;
+	margin: 0.7em 0 0 0;
+	display: inline !important;
+}
+
+#users-feature-line-mobile{
+	display: inline-block;
+	color: #4c4c4c;
+	font-weight: 300;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	background-color: #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	padding: 0.5em 0.5em;
+	margin: 0.7em 0 0 0;
+}
+
+#vt-hash-link-users{
+	color: #0082e0;
+	font-weight: 300;
+}
+
+#vt-hash-link-users:hover{
+	cursor: pointer;
+	color: #2a9ef2;
+}
+
+#users-reasons h3{
+	color: #0082e0;
+	font-weight: 300;
+	font-size: 1.5em;
+	margin: 0 0 1em 0;
+}
+
+#users-reasons ul li{
+	padding-left: 4em;
+}
+
+#users-reasons ul li a#tip-zappos{
+	font-weight: 400;
+	color: #0082e0;
+}
+
+#users-reasons ul li a#tip-zappos:hover{
+	cursor: pointer;
+	color: #2a9ef2;
+}
+
+#users-reasons ul li h5{
+	color: #333333;
+	font-size: 1.3em;
+	font-weight: 700;
+}
+
+#users-reasons ul li p{
+	color: #6a6a6a;
+	font-size: 1em;
+	line-height: 2em;
+}
+
+#users-reasons ul li.heart-icon{
+	background-image: url('/images/icon-heart.png');
+	background-position: top left;
+	background-repeat: no-repeat;
+}
+
+#users-reasons ul li.baby-icon{
+	background-image: url('/images/icon-baby.png');
+	background-position: top left;
+	background-repeat: no-repeat;
+}
+
+#users-reasons ul li.piggybank-icon{
+	background-image: url('/images/icon-piggybank.png');
+	background-position: top left;
+	background-repeat: no-repeat;
+}
+
+#users-signup h2{
+	font-weight: 700;
+	color: #333333;
+	font-size: 1.3em;
+}
+
+#user-signup-form label{
+	color: #444444;
+	margin: 1.5em 0 1em 0;
+}
+
+#signup-login{
+	float: right;
+}
+
+#users-signup p{
+	color: #666666;
+	line-height: 1.8em;
+}
+
+#signup-submit{
+	margin-top: 1.2em;
+	text-align: center;
+}
+
+/* Job List */
+#list-filters dd{
+	margin: 0 0 0 1.1em;
+}
+
+#list-filters dd a{
+	color: #777777;
+}
+
+#list-filters dd a:hover{
+	color: #0082e0;
+	cursor: pointer;
+}
+
+#list-filters dd a.current{
+	color: #ffffff;
+}
+
+dd#search-jobs{
+	float: right;
+	text-align: right;
+}
+
+input#search-jobs-input{
+	background-image: url('/images/search-mag-icon.png');
+	background-position: 6px 6px;
+	background-repeat: no-repeat;
+	padding-left: 26px;
+	border: 1px solid #cccccc;
+	margin-top: -3px;
+}
+
+#list-filters{
+	margin: 0;
+	padding: 0;
+}
+
+#list-filter-box{
+	margin: 0;
+}
+
+#job-list ul{
+	border-top: 1px dashed #999999;
+}
+
+#job-list ul li.list-row{
+	padding: 1.5em 0.5em 1.5em 0.5em !important;
+	color: #444444;
+	font-size: 1em;
+	line-height: 1em;
+	border-bottom: 1px dashed #999999;
+	margin: 0px !important;
+}
+
+#job-list ul li.list-row:hover{
+	cursor: pointer;
+	background-color: #ebf7ff;
+}
+
+ul.job-list-entry li{
+	padding: 0;
+	margin: 0;
+}
+
+ul.job-list-entry li.last{
+	text-align: right;
+}
+
+.job-list-row{
+	margin: 0;
+	padding: 0;
+}
+
+.job-list-row .last{
+	text-align: right;
+}
+
+.mobile-job-list-row{
+	line-height: 1.6em;
+}
+
+.mobile-job-list-row span.comp{
+	float: right;
+	font-style: italic;
+}
+
+.job-list-row .position, .job-list-row .category, .job-list-row .last{
+	line-height: 1.5em;
+}
+
+
+/* Account */
+#account-main ul.tabs-content{
+	background-color: #ffffff;
+}
+
+#jobstabTab h2, #jobstabTab h3{
+	font-size: 2em;
+	color: #333333;
+}
+
+#jobstabTab h2 span{
+	font-weight: 400;
+	color: #777777;
+}
+
+#jobstabTab h5{
+	font-size: 1.4em;
+	color: #0082e0;
+	margin: 0 0 1em 0;
+}
+
+#jobstabTab #post-job select{
+	width: 50%;
+}
+
+#active-posts ul li{
+	margin: 0;
+	padding: 1.2em 0.5em 0.05em 0.5em !important;
+	line-height: 1.5em;
+	border-top: 1px dashed #cccccc;
+	border-bottom: 1px dashed #cccccc;
+	position: relative;
+}
+
+#active-posts ul li span.posted-on{
+	font-size: 0.9em;
+	color: #aaaaaa;
+	font-style: italic;
+}
+
+#active-posts ul li button{
+	position: absolute;
+	right: 0px;
+	top: center;
+	margin-top: 4px;
+}
+
+#active-posts .acct-confirm-del{
+	display: none;
+	position: absolute;
+	right: 0px;
+	top: center;
+	margin-top: 4px;
+}
+
+#jobstabTab span.note{
+	float: right;
+	color: #cccccc;
+}
+
+#profiletabTab h3{
+	font-size: 2em;
+	color: #333333;
+}
+
+span.req-guide{
+	float: right;
+	text-align: right;
+}
+
+#edit-profile-submit-btns{
+	text-align: right;
+}
+
+
+
+/* Job */
+#job-body h1{
+	font-size: 1.9em;
+	font-weight: 300;
+}
+
+#job-body h2{
+	font-size: 1.5em;
+	color: #f55b37;
+}
+
+#job-body h2 span{
+	font-weight: 300 !important;
+	color: #555555;
+	font-size: 0.9em !important;
+}
+
+#job-body h6{
+	font-size: 1em;
+}
+
+#job-meta{
+	padding-bottom: 0px;
+}
+
+#job-description h5, #job-howtoapply h5{
+	color: #999999 !important;
+	margin-bottom: 0.8em;
+}
+
+#job-description p, #job-howtoapply p{
+	line-height: 1.7em;
+}
+
+#job-sidebar h6{
+	font-size: 1.5em;
+	color: #f55b37;
+	font-weight: 700;
+	margin-bottom: 1.2em;
+}
+
+#job-sidebar p.tagline{
+	color: #858585;
+	font-style: italic;
+}
+
+#job-sidebar h6 a{
+	color: #f55b37;
+	font-size: 0.7em;
+	font-weight: 400;
+	float: right;
+	margin-top: 4px;
+}
+
+#job-sidebar h6 a:hover{
+	cursor: pointer;
+	color: #0082e0;
+}
+
+#job-post-share strong{
+	color: #999999;
+	font-weight: 400;
+}
+

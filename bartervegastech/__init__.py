@@ -13,18 +13,15 @@ def main(global_config, **settings):
     session_factory = session_factory_from_settings(settings)
     config = Configurator(settings=settings, root_factory=the_root)
     config.set_session_factory(session_factory)
-    #config.add_static_view('static', 'bartervegastech:static', cache_max_age=3600)
-    config.add_static_view('images', 'bartervegastech:static/images')
-    config.add_static_view('css', 'bartervegastech:static/css')
-    config.add_static_view('js', 'bartervegastech:static/js')
-    #config.add_route('home', '/')
-    #config.add_view('bartervegastech.views.admin', context='bartervegastech.)
     config.include('pyramid_handlers')
-    
     config.add_handler("default", "/", action="home",
-                       handler="bartervegastech.views.handlers.LoggedInHandler")
-    config.add_handler("users", "/users/{action}*id",
-                       handler="bartervegastech.views.handlers.UserAccountHandler", traverse='/users')
+                       handler="bartervegastech.views.handlers.PageHandler")
+    config.add_handler("about", "/about", action="about",
+                       handler="bartervegastech.views.handlers.PageHandler")
+    config.add_handler("users", "/users", action="users", 
+                        handler="bartervegastech.views.handlers.PageHandler")
+    config.add_handler("user", "/user/{action}*id",
+                       handler="bartervegastech.views.handlers.UserAccountHandler", traverse='/user')
     
     config.scan()
     return config.make_wsgi_app()

@@ -39,6 +39,27 @@ class BaseHandler(object):
         self.context = context
 
 
+class PageHandler(BaseHandler):
+
+
+    @action(renderer="home.mako")
+    def home(self):
+        ''' returns an empty dict '''
+        self.log.debug("in home view")
+        return {}
+        
+    @action(renderer="about.mako")
+    def about(self):
+        ''' returns an empty dict '''
+        self.log.debug("in about view")
+        return {}
+        
+    @action(renderer="users.mako")
+    def users(self):
+        ''' returns an empty dict '''
+        self.log.debug("in about view")
+        return {}
+
 class LoggedInHandler(BaseHandler):
     '''
         Base handler implementing an __init__ that ensures there is a logged_in user.
@@ -53,12 +74,6 @@ class LoggedInHandler(BaseHandler):
             if not 'login' in request.path :
                 self.log.debug('not logged in raising exception')
                 raise HTTPFound(location="/users/login")
-
-    @action(renderer="home.mako")
-    def home(self):
-        ''' returns an empty dict '''
-        self.log.debug("in home view")
-        return {}
 
     def delete(self):
         ''' delete the catalog found in matchdict's id'''
