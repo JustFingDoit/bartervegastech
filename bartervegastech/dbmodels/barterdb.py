@@ -84,8 +84,9 @@ class UserAccount(Base1, BaseObject):
     '''
     __tablename__ = 'USER_ACCOUNT'
     id = Column(Integer, primary_key=True)
-    name = Column(Unicode(255), unique=True)
+    username = Column(Unicode(255), unique=True)
     _password = Column('password', Unicode(255))
+    email = Column(Text)
     pwd_context = CryptContext(
         #replace this list with the hash(es) you wish to support.
         schemes=[ "bcrypt" ],
@@ -94,7 +95,7 @@ class UserAccount(Base1, BaseObject):
 
     def __init__(self, name, password):
         ''' Initialize user with the given name and password '''
-        self.name = name
+        self.username = name
         self.set_password(password)
 
     def password(self):
@@ -130,7 +131,7 @@ class OfferWant(Base1, BaseObject):
     description = Column(Text)
     status = Column(Integer)
     
-    def __init__(self, user_id, category_id, offerwant, description)
+    def __init__(self, user_id, category_id, offerwant, description):
         self.user_id = user_id
         self.category_id = category_id
         self.offerwant = offerwant
@@ -149,13 +150,15 @@ class Listing(Base1, BaseObject):
     __tablename__ = 'listings'
     id = Column(Integer, primary_key=True)
     created_on = Column(DateTime)
-    offerwant = Column(Integer)
+    offerwant = Column(Text)
     user_id = Column(Integer)
+    title = Column(Text)
 
-    def __init__(self, offerwant, user_id):
+    def __init__(self, offerwant, user_id, title):
         self.created_on = datetime.datetime.now()    
         self.offerwant = offerwant
         self.user_id = user_id
+        self.title = title
         
 class ListingMap(Base1, BaseObject):
     __tablename__ = 'listingsmap'
@@ -336,8 +339,31 @@ class ListingFactory(BaseFactory):
         '''
         listings = self.filter_by(offerwant=offerwant).all()
         for each in listings:
-            listing = session.query(ListingMap).filter_by(id=each.id).scalar()
+            listing = self.filter_by(id=each.id).scalar()
             
+    def get_listings(self):
+        '''
+            Just gets all the listings arranged by date DESC
+            TODO change from 30 and handle pagination in the handler
+        '''
+        return session.query(Listing).order_by(desc(Listing.created_on)).limit(30).all()
     
+    def get_username(self, user_id):
+        '''
+            Returns the username from the user_id
+        '''
+        return session.query(USER_ACCOUNT).get(user_id)
     
-    def get_
+    def get_category(self, id):
+        '''
+            Using listing_id get the category
+        '''
+        #First figure out if it's offer or want
+        listing = self.get_by_id(id)
+        offerwant_id = session.query(ListingMap).filter_by(listing_id=listing.id).offerwant_id
+        #Then get category for the associated offerwant
+        offerwant = session.query(OfferWant).get(offerwant_id)
+        if offerwant != None:
+            return session.query(Category).get(offerwant.category_id).category
+        return None
+        

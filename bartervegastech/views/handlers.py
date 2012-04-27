@@ -11,7 +11,7 @@ from pyramid.httpexceptions import HTTPNotFound
 
 #from bartervegastech.dbmodels.barterdb import get_player_ids, \
 #        get_poker_player_by_id
-from bartervegastech.dbmodels.barterdb import UserFactory
+from bartervegastech.dbmodels.barterdb import UserFactory, ListingFactory
 #from bartervegastech.dbmodels.shirtsbyme import 
 
 from formencode import Schema
@@ -38,15 +38,35 @@ class BaseHandler(object):
         self.request = request
         self.context = context
 
+class Listing(object):
+    
+    type = ''
+    username = ''
+    date = ''
+    category = ''
+    title = ''
+    
+    def __init__(self, type, username, date, category, title):
+        self.title = title
+        self.type = type
+        self.date = str(date)[10:]
+        self.category = category
+        self.username = username
 
 class PageHandler(BaseHandler):
 
 
     @action(renderer="home.mako")
     def home(self):
-        ''' returns an empty dict '''
+        ''' shows listing on home page '''
         self.log.debug("in home view")
-        return {}
+        listFactory = ListingFactory()
+        listings = listFactory.get_listings()
+        lists = list()
+        for each in listings:
+            lists.append(Listing(each.offerwant, listFactory.get_username(each.user_id), 
+                              each.created_on, listFactory.get_category(each.id), each.title))
+        return {'listings': lists}
         
     @action(renderer="about.mako")
     def about(self):
@@ -167,39 +187,4 @@ class UserAccountHandler(LoggedInHandler):
     
         return HTTPFound(location = "/users/list")
         
-        
-def get_twitter_info(screenname, item):
-    '''
-        Screenname is who you're looking for, item is what you want to know about them
-        followers_count
-        friends_count
-        verified
-        statuses_count
-    '''
-    from StringIO import StringIO
-    import json
-    from urllib2 import urlopen
-    apirequest = "https://api.twitter.com/1/users/show.json?screen_name=" + screenname
-    jsonstring = urlopen(apirequest).read()
-    response = StringIO(jsonstring)
-    jsonfile = json.load(response)
-    if jsonfile.has_key(item):
-        return jsonfile[item]
-    return None
-
-def get_facebook_info(place, item):
-    '''
-        place is the item that the likes are being counted for
-        place = 'shirtsbyme'
-        item is the thing you're looking for (likes, picture, name, about, location
-    '''
-    from StringIO import StringIO
-    import json
-    apirequest = "https://graph.facebook.com/" + place
-    jsonstring = urlopen(apirequest).read()
-    response = StringIO(jsonstring)
-    jsonfile = json.load(response)
-    if jsonfile.has_key(item):
-        return jsonfile[item]
-    return None
 
