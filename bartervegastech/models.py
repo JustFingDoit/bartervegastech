@@ -59,7 +59,7 @@ def root_factory(request):
 
 def populate():
     factory = UserFactory()
-    factory.create_user("administrator", "delicious")
+    factory.create_user("administrator", "delicious", "yo@subkwon.com")
 
 def initialize_sql(engines, test=False):
     from bartervegastech.dbmodels import barterdb

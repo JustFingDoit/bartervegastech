@@ -76,8 +76,8 @@ ${self.head_tags()}
 		
 		<div id="login-form-container">
 		
-			<label for="login-email">Email address</label>
-			<input name="email" id="login-email" class="expand input-text" placeholder="name@example.com" required="required" maxlength="50" type="email">
+			<label for="login-email">Username</label>
+			<input name="username" id="login-email" class="expand input-text" placeholder="tickles" required="required" maxlength="50" type="text">
 						
 			<label for="login-password">Password</label>
 			<input name="password" id="login-password" class="expand input-text" placeholder="Your password" required="required" maxlength="50" type="password">
@@ -87,7 +87,7 @@ ${self.head_tags()}
 				<button type="submit" title="Login" id="login-submit" name="login-submit" class="small blue nice radius button">Login</button>
 			
 			</div> 			
-			<a href="http://BarterVegasTech.com/users#signup" title="Sign up for free">Sign up</a> | <a href="#" onclick="$('#login-form-container').hide(); $('#login-form-pass-recover').show();" title="Forgot your password?">Forgot your password?</a>
+			<a href="/users#signup" title="Sign up for free">Sign up</a> | <a href="#" onclick="$('#login-form-container').hide(); $('#login-form-pass-recover').show();" title="Forgot your password?">Forgot your password?</a>
 		
 		</div> 		
 		<div id="login-form-pass-recover">

@@ -93,10 +93,11 @@ class UserAccount(Base1, BaseObject):
         default="bcrypt",
         )
 
-    def __init__(self, name, password):
+    def __init__(self, name, password, email):
         ''' Initialize user with the given name and password '''
         self.username = name
         self.set_password(password)
+        self.email = email
 
     def password(self):
         '''
@@ -193,6 +194,11 @@ class BaseFactory(object):
         query = self.get_query()
         return query.filter_by(**kwargs)
 
+    def order_by_desc(self, **kwargs):
+        '''Retrieve a query by a specific order'''
+        query = self.get_query()
+        
+
     def get(self, name):
         '''
             Get the product with the given name
@@ -263,9 +269,9 @@ class UserFactory(BaseFactory):
         """Initialize factory"""
         BaseFactory.__init__(self, UserAccount)
         
-    def create_user(self, name, password):
+    def create_user(self, name, password, email):
         """Create a new administrative user"""
-        user = UserAccount(name, password)
+        user = UserAccount(name, password, email)
         return self.add(user)
         
     def verify_user(self, name, password):
@@ -346,7 +352,9 @@ class ListingFactory(BaseFactory):
             Just gets all the listings arranged by date DESC
             TODO change from 30 and handle pagination in the handler
         '''
-        return session.query(Listing).order_by(desc(Listing.created_on)).limit(30).all()
+        #return session.query(Listing).order_by(desc(Listing.created_on)).limit(30).all()
+        query = self.get_query()
+        return query.order_by(desc(Listing.created_on)).limit(30).all()
     
     def get_username(self, user_id):
         '''

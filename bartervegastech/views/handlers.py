@@ -4,6 +4,7 @@
 import logging
 from pyramid_handlers import action
 from pyramid.view import view_config
+from pyramid.renderers import render
 
 from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPFound
@@ -14,8 +15,10 @@ from pyramid.httpexceptions import HTTPNotFound
 from bartervegastech.dbmodels.barterdb import UserFactory, ListingFactory
 #from bartervegastech.dbmodels.shirtsbyme import 
 
+import formencode
 from formencode import Schema
 from formencode import validators
+from formencode import htmlfill
 from pyramid_simpleform import Form
 
 import datetime, random
@@ -37,6 +40,7 @@ class BaseHandler(object):
         self.log = logging.getLogger(__name__ + '.' + self.__class__.__name__)
         self.request = request
         self.context = context
+        
 
 class Listing(object):
     
@@ -55,6 +59,9 @@ class Listing(object):
 
 class PageHandler(BaseHandler):
 
+    def _get_signup_form(self):
+        ''' get the form '''
+        return Form(self.request, schema=UserSchema)
 
     @action(renderer="home.mako")
     def home(self):
@@ -74,11 +81,40 @@ class PageHandler(BaseHandler):
         self.log.debug("in about view")
         return {}
         
-    @action(renderer="users.mako")
-    def users(self):
-        ''' returns an empty dict '''
+    @action(name='users', renderer="users.mako", request_method='POST')
+    def users_post(self):
+        ''' creates a new user account or returns page with errors '''
         self.log.debug("in about view")
-        return {}
+        #TODO set up CSRF token
+        try:
+            form_result = UserSchema().to_python(self.request.POST)
+        except formencode.Invalid, error:
+            print "\n\nzzzzz"
+            form_result = error.value
+            form_errors = error.error_dict or {}
+            print repr(form_errors)
+            html = render('signup_form.mako', {})
+            signupform = htmlfill.render(html, defaults=form_result, errors=form_errors)
+            return {'signupform': signupform}
+        if self.request.POST.get('password') == self.request.POST.get('confirm'):
+            userFactory = UserFactory()
+            userFactory.create_user(self.request.POST.get('username'), 
+                        self.request.POST.get('password'), self.request.POST.get('email'))
+            #TODO send confirmation email
+        else:
+            return {'signupform': htmlfill.render(render('signup_form.mako', {}), 
+                                                  errors={'confirm': "Passwords didn't match"})}
+            
+        #TODO change this to a 'check your email' page
+        return HTTPFound(location='/')
+        
+    
+    @action(name='users', renderer="users.mako", request_method='GET')
+    def users(self):
+        html = render('signup_form.mako', {})
+        signupform = htmlfill.render(html, errors={})
+        return {'signupform': signupform}
+        
 
 class LoggedInHandler(BaseHandler):
     '''
@@ -188,3 +224,10 @@ class UserAccountHandler(LoggedInHandler):
         return HTTPFound(location = "/users/list")
         
 
+class UserSchema(Schema):
+    '''Schema for Users'''
+    allow_extra_fields = True
+    username = validators.MinLength(3, not_empty=True)
+    email = validators.Email(not_empty=True)
+    password = validators.MinLength(6, not_empty=True)
+    confirm = validators.MinLength(6, not_empty=True)

@@ -16,12 +16,9 @@ def main(global_config, **settings):
     config.include('pyramid_handlers')
     config.add_handler("default", "/", action="home",
                        handler="bartervegastech.views.handlers.PageHandler")
-    config.add_handler("about", "/about", action="about",
-                       handler="bartervegastech.views.handlers.PageHandler")
-    config.add_handler("users", "/users", action="users", 
-                        handler="bartervegastech.views.handlers.PageHandler")
     config.add_handler("user", "/user/{action}*id",
                        handler="bartervegastech.views.handlers.UserAccountHandler", traverse='/user')
-    
+    config.add_handler("pages", "/{action}*id", 
+                        handler="bartervegastech.views.handlers.PageHandler")
     config.scan()
     return config.make_wsgi_app()
