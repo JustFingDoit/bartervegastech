@@ -14,6 +14,7 @@ def main(global_config, **settings):
     config = Configurator(settings=settings, root_factory=the_root)
     config.set_session_factory(session_factory)
     config.include('pyramid_handlers')
+    config.include('pyramid_mailer')
     config.add_handler("default", "/", action="home",
                        handler="bartervegastech.views.handlers.PageHandler")
     config.add_handler("user", "/user/{action}*id",

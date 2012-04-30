@@ -17,6 +17,7 @@ requires = [
     'pyramid_beaker',
     'pyramid_handlers',
     'pyramid_simpleform',
+    'pyramid_mailer',
     'zope.sqlalchemy',
     'zope.interface>=3.8.0',
     'passlib',

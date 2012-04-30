@@ -18,6 +18,26 @@ def string_safe(value):
     return value.replace(' ', '_')
 
 
+def gen_hash_password(password):
+    """Generates a hashed password"""
+    import random
+    letters = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    p = ''
+    random.seed()
+    for x in range(32):
+        p += letters[random.randint(0, len(letters)-1)]
+    return p
+
+def generate_password():
+    """Generates a password"""
+    import random
+    import string
+    random.seed(datetime.datetime.now())
+    vc = string.ascii_letters + string.digits
+    h1 = ''.join([random.choice(vc) for i in range(10)])
+    return gen_hash_password(h1)
+
+
 class BaseObject(object):
     '''
         A base object.
@@ -87,6 +107,8 @@ class UserAccount(Base1, BaseObject):
     username = Column(Unicode(255), unique=True)
     _password = Column('password', Unicode(255))
     email = Column(Text)
+    activation = Column(Text)
+    forgot = Column(Text)
     pwd_context = CryptContext(
         #replace this list with the hash(es) you wish to support.
         schemes=[ "bcrypt" ],
@@ -98,6 +120,8 @@ class UserAccount(Base1, BaseObject):
         self.username = name
         self.set_password(password)
         self.email = email
+        self.activation = generate_password()
+        self.forgot = 0
 
     def password(self):
         '''
@@ -197,6 +221,7 @@ class BaseFactory(object):
     def order_by_desc(self, **kwargs):
         '''Retrieve a query by a specific order'''
         query = self.get_query()
+        return query.order_by(desc(**kwargs))
         
 
     def get(self, name):
@@ -260,7 +285,6 @@ class BaseFactory(object):
         transaction.commit()
         return self.filter_by(id=id_).one()
 
-
 class UserFactory(BaseFactory):
     '''
         Factory for users
@@ -277,11 +301,25 @@ class UserFactory(BaseFactory):
     def verify_user(self, name, password):
         """Authenticate user credentials"""
         try:
-            user = session.query(UserAccount).filter_by(name = name).one()
+            user = session.query(UserAccount).filter_by(username = name).one()
         except:
             #No such user exists
             return False
         return user.validate_password(password)
+        
+    def check_username(self, username):
+        """Checks to see if username already exists"""
+        user = self.filter_by(username=username).first()
+        if user != None:
+            return False
+        return True
+            
+    def check_email(self, email):
+        """Checks to see if email already exists"""
+        user = self.filter_by(email=email).first()
+        if user != None:
+            return False
+        return True
         
     def list_users(self):
         """List all the users"""
@@ -290,10 +328,41 @@ class UserFactory(BaseFactory):
     def get_user_id(self, username):
         """Gets user id from username"""
         try:
-            userid = session.query(UserAccount.id).filter_by(name = username).one()
+            user = self.filter_by(username = username).one()
         except:
             return None
-        return userid
+        return user.id
+    
+    def activate(self, username, activation_code):
+        ''' Activates the user's account
+        returns boolean based on success '''
+        id = self.get_user_id(username)
+        if id != None:
+            user = self.get_by_id(id)
+            if user.activation == activation_code:
+                user.activation = 1
+                self.update(user)
+                return True
+        return False
+    
+    def get_user_by_email(self, email):
+        try:
+            user = self.filter_by(email=email).one()
+        except:
+            return None
+        return user
+        
+    def forgot(self, id):
+        user = self.get_by_id(id)
+        user.forgot = generate_password()
+        self.update(user)
+        return user.forgot
+    
+    def resetcheck(self, username, code):
+        user = self.get_by_id(self.get_user_id(username))
+        if user.forgot == code:
+            return True
+        return False
 
 class OfferWantFactory(BaseFactory):
     '''
@@ -354,6 +423,7 @@ class ListingFactory(BaseFactory):
         '''
         #return session.query(Listing).order_by(desc(Listing.created_on)).limit(30).all()
         query = self.get_query()
+        #return self.order_by_desc(Listing.created_on).limit(30).all()
         return query.order_by(desc(Listing.created_on)).limit(30).all()
     
     def get_username(self, user_id):

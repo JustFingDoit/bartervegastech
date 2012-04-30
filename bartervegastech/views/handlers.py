@@ -23,6 +23,31 @@ from pyramid_simpleform import Form
 
 import datetime, random
 
+def sendMail(request, msg, to, username='', confirm=''):
+    from pyramid_mailer import get_mailer
+    from pyramid_mailer.message import Message
+    mailer = get_mailer(request)
+    if msg == 'confirm':
+        message = Message(sender="noreply@bartervegastech.com", recipients=[to], 
+                          subject="Welcome to BarterVegasTech!")
+        message.body = "Hello " + username + ",\n\n" + \
+            "Thank you for checking out http://www.bartervegastech.com\n\n" + \
+            "To activate your account please go to:\nhttp://www.bartervegastech.com/message/" + \
+            "activate/" + username + "/" + confirm + "\n\nIf you do not wish to have an " + \
+            "account you may just ignore this email.\nThanks!\nBarterVegasTech.com"
+        if request.registry.settings['testing'] != "true":
+            mailer.send(message) 
+    elif msg == 'forgot':
+        message = Message(sender="support@bartervegastech.com", recipients=[to], 
+                          subject="BarterVegasTech Password Recovery")
+        message.body = "Hello " + username + ",\n\n" + \
+            "To reset your password please go to:\nhttp://www.bartervegastech.com/reset/" + \
+            username + "/" + confirm + "\n\n" + \
+            "If you did not request to have your password changed then " + \
+            "you may just ignore this email.\nThanks!\nBarterVegasTech.com"
+        if request.registry.settings['testing'] != "true":
+            mailer.send(message)
+        
 
 class BaseHandler(object):
     '''
@@ -59,6 +84,8 @@ class Listing(object):
 
 class PageHandler(BaseHandler):
 
+
+
     def _get_signup_form(self):
         ''' get the form '''
         return Form(self.request, schema=UserSchema)
@@ -77,7 +104,7 @@ class PageHandler(BaseHandler):
         
     @action(renderer="about.mako")
     def about(self):
-        ''' returns an empty dict '''
+        ''' Shows the about page '''
         self.log.debug("in about view")
         return {}
         
@@ -89,24 +116,31 @@ class PageHandler(BaseHandler):
         try:
             form_result = UserSchema().to_python(self.request.POST)
         except formencode.Invalid, error:
-            print "\n\nzzzzz"
             form_result = error.value
             form_errors = error.error_dict or {}
-            print repr(form_errors)
             html = render('signup_form.mako', {})
             signupform = htmlfill.render(html, defaults=form_result, errors=form_errors)
             return {'signupform': signupform}
         if self.request.POST.get('password') == self.request.POST.get('confirm'):
             userFactory = UserFactory()
-            userFactory.create_user(self.request.POST.get('username'), 
-                        self.request.POST.get('password'), self.request.POST.get('email'))
-            #TODO send confirmation email
+            usernamecheck = userFactory.check_username(self.request.POST.get('username'))
+            emailcheck = userFactory.check_email(self.request.POST.get('email'))
+            if usernamecheck and emailcheck:
+                user = userFactory.create_user(self.request.POST.get('username'), 
+                            self.request.POST.get('password'), self.request.POST.get('email'))
+                sendMail(self.request, 'confirm', user.email, user.username, user.activation)
+            else:
+                if not usernamecheck:
+                    form_errors={'username': "Username taken"}
+                if not emailcheck:
+                    form_errors['email'] = "Email address already used"
+                return {'items': items, 'signupform': htmlfill.render(render('signup_form.mako', {}), 
+                                defaults=form_result, errors=form_errors)}
         else:
             return {'signupform': htmlfill.render(render('signup_form.mako', {}), 
-                                                  errors={'confirm': "Passwords didn't match"})}
-            
-        #TODO change this to a 'check your email' page
-        return HTTPFound(location='/')
+                                defaults=form_result, errors={'confirm': "Passwords didn't match"})}
+           
+        return HTTPFound(location='/message/confirm')
         
     
     @action(name='users', renderer="users.mako", request_method='GET')
@@ -114,7 +148,53 @@ class PageHandler(BaseHandler):
         html = render('signup_form.mako', {})
         signupform = htmlfill.render(html, errors={})
         return {'signupform': signupform}
+    
+    
+    @action(renderer="message.mako")
+    def message(self):
+        id_ = self.request.matchdict.get('id')
+        message = ''
+        if id_ :
+            if id_[0] == "confirm":
+                message = "Thank you for signing up. Please check your email to activate your account."
+            elif id_[0] == "activate":
+                userFactory = UserFactory()
+                if userFactory.activate(id_[1], id_[2]):
+                    message = "Your account has been successfully activated. You may now login"
+                else:
+                    message = "There was an error activating your account. It may already be active or username no longer exists."
+            elif id_[0] == "error":
+                message = "An unknown error occurred."
+        return {'message': message}
         
+    @action(renderer="account.mako")
+    def account(self):
+        return{}
+
+    @action(renderer="message.mako")
+    def forgot(self):
+        if self.request.POST.get('email'):
+            userFactory = UserFactory()
+            emailcheck = userFactory.check_email(self.request.POST.get('email'))
+            if not emailcheck:
+                message = "Email not found in our system."
+            else:
+                user = userFactory.get_user_by_email(self.request.POST.get('email'))
+                code = userFactory.forgot(user.id)
+                sendcode(self.request, forgot, email, user.username, code)
+        else:
+            message = "Please enter a valid email address."        
+                
+
+    @action(renderer="changepassword.mako")
+    def reset(self):
+        id_ = self.request.matchdict.get('id')
+        userFactory = UserFactory()
+        if id_:   
+            if userFactory.resetcheck(id_[0], id_[1]):
+                return {}
+        return HTTPFound(location='/message/error')
+            
 
 class LoggedInHandler(BaseHandler):
     '''
@@ -168,7 +248,6 @@ class UserAccountHandler(LoggedInHandler):
                 self.log.debug("Login failed, but tried")
                 message = "Login failed"
             except AssertionError:
-                print "\n\nBBBBBBBBBBB"
                 self.log.debug("Login failed")
                 message = "Login failed."
         self.log.debug('login view returning')
@@ -182,17 +261,6 @@ class UserAccountHandler(LoggedInHandler):
         del self.request.session['logged_in']
         return HTTPFound(location = "/")
 
-
-    @action(name="list", renderer='users.mako')
-    def list_users(self):
-        '''
-            return a list of all the users.
-        '''
-        #from bartervegastech.dbmodels.barterdb import list_users
-        
-        factory = UserFactory()
-        return {'users': factory.list_users()}
-        #return {'users':list(self.context)}
 
     @action(name="add", renderer='add_user.mako')
     def add_user(self):
@@ -208,7 +276,7 @@ class UserAccountHandler(LoggedInHandler):
             if password == password2:
                 self.log.debug("creating user")
                 self.context.create_user(username, password)
-            return HTTPFound(location = "/users/list")
+            return HTTPFound(location = "/users")
             
         return {}
     
@@ -217,9 +285,10 @@ class UserAccountHandler(LoggedInHandler):
         '''
             Remove a user from the system.
         '''
-        id_ = self.request.matchdict.get('id')
-        if id_ :
-            self.context.delete(id_[0])
+        if self.request.session.get('logged_in') == 1:
+            id_ = self.request.matchdict.get('id')
+            if id_ :
+                self.context.delete(id_[0])
     
         return HTTPFound(location = "/users/list")
         
@@ -231,3 +300,12 @@ class UserSchema(Schema):
     email = validators.Email(not_empty=True)
     password = validators.MinLength(6, not_empty=True)
     confirm = validators.MinLength(6, not_empty=True)
+    
+    
+class OfferWant(Schema):
+    '''Schema for creating an offer or want'''
+    allow_extra_fields = True
+
+class Profile(Schema):
+    '''Schema for editing user profile'''
+    allow_extra_fields = True

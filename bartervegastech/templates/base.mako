@@ -72,7 +72,7 @@ ${self.head_tags()}
 	
 	<span class="white round label">Login is for <em>everyone</em>!</span>
 	
-	<form name="login" id="login-form" method="post" action="" class="nice">
+	<form name="login" id="login-form" method="post" action="/user/login" class="nice">
 		
 		<div id="login-form-container">
 		
