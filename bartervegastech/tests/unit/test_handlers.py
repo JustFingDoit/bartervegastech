@@ -118,17 +118,17 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
     def test_login_view_success(self):
         from bartervegastech.dbmodels.barterdb import UserFactory
         handler = self._get_handler(params=self._get_params(),
-                                    path='/users/login',
+                                    path='/user/login',
                                     context=UserFactory())
         handler.login()
-        assert (self.request.session['logged_in'])[0] == 1
+        assert (self.request.session['logged_in']) == 1
 
     def test_login_view_bad_user(self):
         from bartervegastech.views.handlers import UserAccountHandler
         from bartervegastech.dbmodels.barterdb import UserFactory
 
         params = self._get_params(username=u'foo')
-        request = self._get_request(params=params, path='/users/login')
+        request = self._get_request(params=params, path='/user/login')
         context = UserFactory()
         handler = UserAccountHandler(context, request)
         response = handler.login()
@@ -137,41 +137,14 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         self.assertEquals(response['username'], params['username'])
         self.assertEquals(response['password'], params['password'])
 
-    def test_login_view_assertion_error(self):
-        '''Doesn't actually throw the assertion error'''
-        from bartervegastech.views.handlers import UserAccountHandler
-        from bartervegastech.dbmodels.barterdb import UserFactory
-
-        params = self._get_params(username=u'', password=None)
-        request = self._get_request(params=params, path='/users/login')
-        context = UserFactory()
-        handler = UserAccountHandler(context, request)
-        response = handler.login()
-        self.assertEquals(request.session.get('logged_in'), None)
-        self.assertEquals(response['username'], '')
-        self.assertEquals(response['password'], None)
-        self.assertEquals(response["message"], "Login failed")
-        
 
     def test_logout(self):
         handler = self._get_logged_in_handler()
         handler.logout()
         self.assertEquals(self.request.session.get('logged_in'), None)
 
-    def test_list_users(self):
-        from bartervegastech.views.handlers import UserAccountHandler
-        from bartervegastech.dbmodels.barterdb import UserFactory
-        request = self._get_logged_in_request()
-        context = UserFactory()
-        handler = UserAccountHandler(context, request)
-
-        expected = list(context)
-        response = handler.list_users()
-        actual = response['users']
-        self.assertEquals(actual, expected)
-
     def test_add_user_calls_create_user(self):
-        params = self._get_params(username='bob2', password='neil')
+        params = self._get_params(username='bob2', password='neil', email='test@mailinator.com')
         context = MockUserFactory()
         handler = self._get_handler(params=params,
                                     context=context,
@@ -232,11 +205,12 @@ class TestUserAccountHandler(HandlerBase, unittest.TestCase):
         context = testing.DummyResource()
         return UserAccountHandler(context, self.request)
 
-    def _get_params(self, username=u'administrator', password=u'delicious',
-                    login_button='Log in!'):
+    def _get_params(self, username=u'administrator', password=u'delight',
+                    email=u'test@mailinator.com', loginsubmit='Log in!'):
         return dict(
             username=username,
             password=password,
             password2=password,
-            login_button=login_button,
+            email=email,
+            loginsubmit=loginsubmit,
         )

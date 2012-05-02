@@ -31,49 +31,37 @@
 															
 								<h2><span>New job:</span> Versogroup</h2>
 								
-								<p>Jobs posts stay active for 45 days from the day they are posted. <br><span class="req">*</span> required.</p>
+								<p>Posts stay active for 45 days from the day they are posted. <br><span class="req">*</span> required.</p>
 								
 								<form name="post-job" id="post-job" class="nice" method="post" action="">
 								
-									<label for="position">Position Title <span class="req">*</span></label>
-									<input class="expand input-text" id="position" name="position" required="required" maxlength="100" placeholder="ie. Sr. Web Designer" type="text">
-																		
-									<label for="status">Status <span class="req">*</span></label>
+									<label for="status">Looking to <span class="req">*</span></label>
 									<select name="status" id="status">
-										<option selected="selected" value="full-time">Full Time</option>
-										<option value="part-time">Part Time</option>
-										<option value="freelance">Freelance</option>
-										<option value="contract">Contract</option>
+										<option selected="selected" value="want">post a request</option>
+										<option value="offer">offer my services</option>
 									</select>
-																		
-									<label for="duration">Duration</label>
-									<input class="expand input-text" id="duration" name="duration" maxlength="150" placeholder="ie. Ongoing" type="text">
-									
-									<label for="starts">Starts <span class="req">*</span></label>
-									<input class="expand input-text" id="starts" name="starts" maxlength="150" placeholder="ie. ASAP" type="text">
-																		
-									<label for="rate">Rate or Salary <span class="req">*</span></label>
-									<input class="expand input-text" id="rate" name="rate" maxlength="100" placeholder="ie. $60K to $80K DOE" type="text">
-																		
+								
+									<label for="position">Title <span class="req">*</span></label>
+									<input class="expand input-text" id="position" name="title" required="required" maxlength="100" placeholder="e.g. Juggling" type="text">
+
 									<label for="category">Category <span class="req">*</span></label>
 									<select name="category" id="category">
 										<option selected="selected" value="null">Please choose:</option>
-										<option value="design">Design</option>
-										<option value="programming">Programming</option>
-										<option value="information-tech">Information Technology</option>
-										<option value="engineering">Engineering</option>
-										<option value="other">Other</option>
+										%for category in categories:
+										<option value="${category.id}">${category.category}</option>
+										%endfor
 									</select>
-																		
+
 									<label for="description">Description <span class="req">*</span><span class="note">No HTML</span></label>
-									<textarea name="description" id="description" class="expand" placeholder="Include a brief description of your company, position responsibilities, and skill requirements..." rows="10" required="required"></textarea>
+									<textarea name="description" id="description" class="expand" placeholder="Include a description of more specifically you have in mind." rows="10" required="required"></textarea>																		
 																		
-									<label for="howtoapply">How to Apply <span class="req">*</span><span class="note">No HTML</span></label>
-									<textarea name="howtoapply" id="howtoapply" class="expand" placeholder="Include URL or email address along with any applicable instructions for the candidate" rows="4" required="required"></textarea>
+																		
+									<label for="howtoapply">And in return... <span class="req">*</span><span class="note">No HTML</span></label>
+									<textarea name="inreturn" id="howtoapply" class="expand" placeholder="What would you want or offer in return" rows="4" required="required"></textarea>
 																		
 									<div id="post-job-submit">
 									
-										<button type="submit" name="job-submit-btn" id="job-submit-btn" class="nice blue radius button">Submit Job</button>
+										<button type="submit" name="job-submit-btn" id="job-submit-btn" class="nice blue radius button">Submit</button>
 									
 									</div> 								
 								</form>
@@ -85,40 +73,21 @@
 								<a name="active-posts"></a>
 								<h3>Active posts</h3>
 								
-								<p>Using <strong>3</strong> of <strong>25</strong> available post slots.</p>
+								<p>Using <strong>${len(active)}</strong> of <strong>25</strong> available post slots.</p>
 								
 								<ul>
-									
+									%for each in active:
 																				<li>
-												<form name="active-post-31" id="active-post-31" method="post" action="">
-													<button type="button" name="delete" title="Delete this post" class="small white radius button nice" id="del-post-btn-31" onclick="$('#del-post-btn-31').hide(); $('#confirm-del-post-31').fadeIn(300); return false;">x</button>
-													<button type="submit" name="confirm-delete" title="Delete this post" class="small red radius button nice acct-confirm-del" id="confirm-del-post-31">Confirm</button>
-													<input name="jid" value="31" type="hidden">
-													<strong><a href="http://hirevegastech.com/job/versogroup/2012-04-20/design/full-time/web-designer/" title="View job post">Web designer</a></strong>
+												<form name="active-post-${each.list_id}" id="active-post-${each.list_id}" method="post" action="">
+													<button type="button" name="delete" title="Delete this post" class="small white radius button nice" id="del-post-btn-${each.list_id}" onclick="$('#del-post-btn-${each.list_id}').hide(); $('#confirm-del-post-${each.list_id}').fadeIn(300); return false;">x</button>
+													<button type="submit" name="confirm-delete" title="Delete this post" class="small red radius button nice acct-confirm-del" id="confirm-del-post-${each.list_id}">Confirm</button>
+													<input name="jid" value="${each.list_id}" type="hidden">
+													<strong><a href="${each.url}" title="View job post">${each.title}</a></strong>
 													<br>
-													<span class="posted-on">Posted on Apr 202012</span>
+													<span class="posted-on">Posted on ${each.date}</span>
 												</form>
 											</li>
-																					<li>
-												<form name="active-post-29" id="active-post-29" method="post" action="">
-													<button type="button" name="delete" title="Delete this post" class="small white radius button nice" id="del-post-btn-29" onclick="$('#del-post-btn-29').hide(); $('#confirm-del-post-29').fadeIn(300); return false;">x</button>
-													<button type="submit" name="confirm-delete" title="Delete this post" class="small red radius button nice acct-confirm-del" id="confirm-del-post-29">Confirm</button>
-													<input name="jid" value="29" type="hidden">
-													<strong><a href="http://hirevegastech.com/job/versogroup/2012-04-20/programming/full-time/developers-developers-developers-developers-developers-developers/" title="View job post">Developers Developers Developers Developers Developers Developers </a></strong>
-													<br>
-													<span class="posted-on">Posted on Apr 202012</span>
-												</form>
-											</li>
-																					<li>
-												<form name="active-post-9" id="active-post-9" method="post" action="">
-													<button type="button" name="delete" title="Delete this post" class="small white radius button nice" id="del-post-btn-9" onclick="$('#del-post-btn-9').hide(); $('#confirm-del-post-9').fadeIn(300); return false;">x</button>
-													<button type="submit" name="confirm-delete" title="Delete this post" class="small red radius button nice acct-confirm-del" id="confirm-del-post-9">Confirm</button>
-													<input name="jid" value="9" type="hidden">
-													<strong><a href="http://hirevegastech.com/job/Versogroup/2012-04-10/other/part-time/n00b-level-social-media-/" title="View job post">n00b level social media </a></strong>
-													<br>
-													<span class="posted-on">Posted on Apr 102012</span>
-												</form>
-											</li>
+									%endfor
 																												
 								</ul>
 							
@@ -141,7 +110,7 @@
 							
 								<div class="six columns">
 								
-									<label for="profile-company">Company name <span class="req">*</span></label>
+									<label for="profile-company">Username <span class="req">*</span></label>
 									<input class="expand input-text" id="profile-company" name="company" placeholder="ie. My Company" value="Versogroup" maxlength="50" required="required" type="text">
 																		
 									<label for="profile-website">Website URL <span class="req">*</span></label>
@@ -219,7 +188,7 @@ $(function(){
 					
 					<li><a href="/about" title="About #VegasTech">About</a></li>
 					
-%if items['logged_in']:
+%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
 										
 						<li><a href="/account" title="Account" id="current">Account</a></li>
 						

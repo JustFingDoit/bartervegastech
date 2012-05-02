@@ -363,6 +363,13 @@ class UserFactory(BaseFactory):
         if user.forgot == code:
             return True
         return False
+    
+    def reset(self, code, password):
+        user = self.filter_by(forgot=code).scalar()
+        if user != None:
+            user.set_password(password)
+            return True
+        return False
 
 class OfferWantFactory(BaseFactory):
     '''
@@ -398,6 +405,9 @@ class CategoryFactory(BaseFactory):
             Get the category by name
         '''
         return self.filter_by(category=name).scalar()
+    
+    def list_categories(self):
+        return self.get_query().all()
         
 class ListingFactory(BaseFactory):
     '''
@@ -413,8 +423,16 @@ class ListingFactory(BaseFactory):
             Then get all the details for that listing
         '''
         listings = self.filter_by(offerwant=offerwant).all()
-        for each in listings:
-            listing = self.filter_by(id=each.id).scalar()
+        #for each in listings:
+        #    listing = self.filter_by(id=each.id).scalar()
+        return listings
+            
+    def get_listings_by_user_id(self, id):
+        '''
+            Figure out all the listings of the specific type
+            Then get all the details for that listing
+        '''
+        return self.filter_by(user_id=id).all()
             
     def get_listings(self):
         '''

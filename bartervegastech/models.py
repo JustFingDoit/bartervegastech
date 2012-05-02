@@ -18,7 +18,7 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base1 = declarative_base()
 #metadata1 = MetaData()
 #metadata2 = MetaData()
-from bartervegastech.dbmodels.barterdb import UserFactory
+from bartervegastech.dbmodels.barterdb import UserFactory, CategoryFactory
 logger = logging.getLogger(__name__)
 """class MyModel(Base2):
     __tablename__ = 'models'
@@ -59,7 +59,22 @@ def root_factory(request):
 
 def populate():
     factory = UserFactory()
-    factory.create_user("administrator", "delicious", "yo@subkwon.com")
+    factory.create_user("administrator", "delight", "test@test.com")
+    categs = CategoryFactory()
+    categs.create_category("Design")
+    categs.create_category("Programming")
+    categs.create_category("Information Technology")
+    categs.create_category("Engineering")
+    categs.create_category("Culinary")
+    categs.create_category("Sports")
+    categs.create_category("Music")
+    categs.create_category("Beauty")
+    categs.create_category("Financial")
+    categs.create_category("Legal")
+    categs.create_category("Automotive")
+    categs.create_category("Labor")
+    categs.create_category("Other")
+    
 
 def initialize_sql(engines, test=False):
     from bartervegastech.dbmodels import barterdb

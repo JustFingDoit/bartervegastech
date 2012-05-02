@@ -17,6 +17,8 @@ def main(global_config, **settings):
     config.include('pyramid_mailer')
     config.add_handler("default", "/", action="home",
                        handler="bartervegastech.views.handlers.PageHandler")
+    config.add_handler("account", "/account", action="account",
+                       handler="bartervegastech.views.handlers.UserAccountHandler")
     config.add_handler("user", "/user/{action}*id",
                        handler="bartervegastech.views.handlers.UserAccountHandler", traverse='/user')
     config.add_handler("pages", "/{action}*id", 

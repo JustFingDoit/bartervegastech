@@ -1,32 +1,18 @@
 # -*- coding: utf-8 -*- 
 <%inherit file="base.mako"/>
 <%def name="head_tags()">
-    <title>Barter Vegas Tech: Message</title>
+    <title>Barter Vegas Tech: Reset Password</title>
 </%def>
-
 <%def name="body()">
 
-	<div id="main" class="container">
-		
-		<div class="row">
-		
-			<div id="about-main" class="eight columns">
-			
-				<div class="panel hide-on-phones">
-					
-					<p class="big">${message}</p>
-					
-				</div> 				
-				<div class="panel show-on-phones">
-					
-					<p class="big-mobile">${message}</p>
-					
-				</div> 				
-			
-			</div> 			
-		
-		</div>
-	</div>
+    <span id='message'>${message}</span>
+    <form action="/reset" method="post">
+    	<input type="hidden" name="code" value="${forgot}"/>
+        <label for="password">Password:</label> <input type="password" name="password" value=""/><br/>
+        <label for="password">Confirm:</label> <input type="password" name="confirm" value=""/><br/>
+        <input type="submit" name="reset-password" value="Reset Password"/>
+      </form>
+
 
 </%def>
 
@@ -40,10 +26,9 @@
 						<li><a href="/account" title="Account" >Account</a></li>
 						
 						<li><a href="/user/logout" title="Logout">Logout</a></li>
-%else:
-										
+%else:										
 						<li><a href="/users" title="User Section">Users</a></li>
 					
 						<li><a href="#" title="User Login" id="navbar-login-btn" data-reveal-id="login-modal" data-animation="fade" class="small button nice radius blue">Login</a></li>
-%endif
+%endif	
  </%def>

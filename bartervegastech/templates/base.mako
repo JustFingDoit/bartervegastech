@@ -84,7 +84,7 @@ ${self.head_tags()}
 						
 			<div id="login-form-submit">
 			
-				<button type="submit" title="Login" id="login-submit" name="login-submit" class="small blue nice radius button">Login</button>
+				<button type="submit" title="Login" id="login-submit" name="loginsubmit" class="small blue nice radius button">Login</button>
 			
 			</div> 			
 			<a href="/users#signup" title="Sign up for free">Sign up</a> | <a href="#" onclick="$('#login-form-container').hide(); $('#login-form-pass-recover').show();" title="Forgot your password?">Forgot your password?</a>

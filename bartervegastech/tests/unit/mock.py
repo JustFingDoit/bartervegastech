@@ -7,21 +7,21 @@ class MockUserFactory(object):
     users = {}
 
     def __init__(self):
-        self._add_user('Ben', 'Hur')
+        self._add_user('Ben', 'Hur', 'testing@mailinator.com')
 
     def get(self, name):
         return self.users.get(name)
 
-    def create_user(self, username, password):
-        self._add_user(username, password)
+    def create_user(self, username, password, email):
+        self._add_user(username, password, email)
 
     def __iter__(self):
         return iter(self.users)
 
-    def _add_user(self, username, password):
+    def _add_user(self, username, password, email):
         from bartervegastech.dbmodels.barterdb import UserAccount
         self.id_iter += 1
-        user = UserAccount(username, password)
+        user = UserAccount(username, password, email)
         user.id = self.id_iter
         self.users[username] = user
 

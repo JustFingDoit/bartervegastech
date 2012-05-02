@@ -124,7 +124,7 @@
 					
 					<li><a href="/about" title="About #VegasTech">About</a></li>
 					
-%if request.session.get('logged_in') != None and request.session.get('logged_in')[0] >= 0:
+%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
 										
 						<li><a href="/account" title="Account" >Account</a></li>
 						

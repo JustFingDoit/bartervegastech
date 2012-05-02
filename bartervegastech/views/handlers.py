@@ -12,7 +12,7 @@ from pyramid.httpexceptions import HTTPNotFound
 
 #from bartervegastech.dbmodels.barterdb import get_player_ids, \
 #        get_poker_player_by_id
-from bartervegastech.dbmodels.barterdb import UserFactory, ListingFactory
+from bartervegastech.dbmodels.barterdb import UserFactory, ListingFactory, CategoryFactory
 #from bartervegastech.dbmodels.shirtsbyme import 
 
 import formencode
@@ -69,21 +69,36 @@ class BaseHandler(object):
 
 class Listing(object):
     
+    list_id = 0
     type = ''
     username = ''
     date = ''
     category = ''
     title = ''
+    url = ''
     
-    def __init__(self, type, username, date, category, title):
+    def __init__(self, id, type, username, date, category, title):
+        self.list_id = id
         self.title = title
         self.type = type
         self.date = str(date)[10:]
         self.category = category
         self.username = username
+        self.url = '/user/' + username + '/' + self.date + '/' + self.cleanwords(category) + \
+                '/' + self.cleanwords(title) 
+
+    def cleanwords(self, thestring):
+        import re
+        return re.sub(r'/\s+/g', '-', thestring).lower()
+
+def get_listings(self, listings, listFactory):
+    lists = list()
+    for each in listings:
+        lists.append(Listing(each.id, each.offerwant, listFactory.get_username(each.user_id), 
+                          each.created_on, listFactory.get_category(each.id), each.title))
+    return lists
 
 class PageHandler(BaseHandler):
-
 
 
     def _get_signup_form(self):
@@ -96,10 +111,7 @@ class PageHandler(BaseHandler):
         self.log.debug("in home view")
         listFactory = ListingFactory()
         listings = listFactory.get_listings()
-        lists = list()
-        for each in listings:
-            lists.append(Listing(each.offerwant, listFactory.get_username(each.user_id), 
-                              each.created_on, listFactory.get_category(each.id), each.title))
+        lists = get_listings(self, listings, listFactory)
         return {'listings': lists}
         
     @action(renderer="about.mako")
@@ -167,10 +179,6 @@ class PageHandler(BaseHandler):
                 message = "An unknown error occurred."
         return {'message': message}
         
-    @action(renderer="account.mako")
-    def account(self):
-        return{}
-
     @action(renderer="message.mako")
     def forgot(self):
         if self.request.POST.get('email'):
@@ -183,18 +191,32 @@ class PageHandler(BaseHandler):
                 code = userFactory.forgot(user.id)
                 sendcode(self.request, forgot, email, user.username, code)
         else:
-            message = "Please enter a valid email address."        
+            message = "Please enter a valid email address."
+        return {'message': message}
                 
 
-    @action(renderer="changepassword.mako")
-    def reset(self):
+    @action(renderer="pwreset.mako")
+    def reset(self, message=""):
         id_ = self.request.matchdict.get('id')
         userFactory = UserFactory()
         if id_:   
             if userFactory.resetcheck(id_[0], id_[1]):
-                return {}
+                return {'message': message}
         return HTTPFound(location='/message/error')
-            
+    
+    @action(name="reset", renderer="message.mako", request_method='POST')
+    def reset_post(self):
+        code = self.request.params.get('code')
+        password = self.request.params.get('password')
+        confirm = self.request.params.get('confirm')
+        if password != confirm:
+            self.reset("Passwords don't match")
+        userFactory = UserFactory()
+        if userFactory.reset(code, password):
+            message = "Password changed, you may login now."
+        else:
+            message = "There was an error changing your password" 
+        return {'message': message}
 
 class LoggedInHandler(BaseHandler):
     '''
@@ -237,19 +259,16 @@ class UserAccountHandler(LoggedInHandler):
         username = ''
         password = ''
         message = ''
-        if 'login_button' in self.request.params:
+        if 'loginsubmit' in self.request.params:
             username = self.request.params.get('username')
             password = self.request.params.get('password')
-            try:           
-                if self.context.verify_user(username, password):
-                    self.request.session['logged_in'] = self.context.get_user_id(username)
-                    self.log.debug("Login succeeded")
-                    return HTTPFound(location = "/")
-                self.log.debug("Login failed, but tried")
-                message = "Login failed"
-            except AssertionError:
-                self.log.debug("Login failed")
-                message = "Login failed."
+            userFactory = UserFactory()
+            if userFactory.verify_user(username, password):
+                self.request.session['logged_in'] = userFactory.get_user_id(username)
+                self.log.debug("Login succeeded")
+                return HTTPFound(location = "/")
+            self.log.debug("Login failed, but tried")
+            message = "Login failed"
         self.log.debug('login view returning')
         return {'username':username, 'password':password, 'message':message}
 
@@ -261,6 +280,15 @@ class UserAccountHandler(LoggedInHandler):
         del self.request.session['logged_in']
         return HTTPFound(location = "/")
 
+    @action(renderer="account.mako")
+    def account(self):
+        listFactory = ListingFactory()
+        listings = listFactory.get_listings_by_user_id(self.request.session['logged_in'])
+        active = get_listings(self, listings, listFactory)
+        categs = CategoryFactory()
+        userFactory = UserFactory()
+        user = userFactory.get_by_id(self.request.session['logged_in'])
+        return{'active': active, 'categories': categs.list_categories(), 'user': user}
 
     @action(name="add", renderer='add_user.mako')
     def add_user(self):
@@ -272,10 +300,11 @@ class UserAccountHandler(LoggedInHandler):
             username = self.request.params.get('username')
             password = self.request.params.get('password')
             password2 = self.request.params.get('password2')
+            email = self.request.params.get('email')
             self.log.debug("username is " + str(username))
             if password == password2:
                 self.log.debug("creating user")
-                self.context.create_user(username, password)
+                self.context.create_user(username, password, email)
             return HTTPFound(location = "/users")
             
         return {}
@@ -305,7 +334,12 @@ class UserSchema(Schema):
 class OfferWant(Schema):
     '''Schema for creating an offer or want'''
     allow_extra_fields = True
-
+    status = validators.MinLength(1, not_empty=True)
+    title = validators.MinLength(3, not_empty=True)
+    category = validators.Int()
+    description = validators.MinLength(3, not_empty=True)
+    inreturn = validators.MinLength(3, not_empty=True)
+    
 class Profile(Schema):
     '''Schema for editing user profile'''
     allow_extra_fields = True
