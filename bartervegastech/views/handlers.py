@@ -355,9 +355,9 @@ class UserAccountHandler(LoggedInHandler):
         want = 0
         if form_result['status'] == "offer":
             offer = offerwant.create_offer(user_id,  
-                                           form_result['category'], form_result['description']).id
+                                           form_result['category'], form_result['description'])
             want = offerwant.create_want(user_id, 
-                                         0, form_result['inreturn']).id
+                                         0, form_result['inreturn'])
         elif form_result['status'] == "want":
             offer = offerwant.create_offer(user_id, 
                                            0, form_result['inreturn'])

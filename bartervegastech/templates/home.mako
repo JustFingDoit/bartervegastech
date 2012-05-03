@@ -25,36 +25,7 @@
 			
 				
 <div class="panel">
-<div id="list-filter-box" class="hide-on-phones">
-
-	<div id="list-filters">
-		
-		<form name="filter-jobs" id="filter-jobs-form" class="nice" method="get" action="">
-	
-			<dl class="sub-nav">
-			
-				<dt>Filter:</dt>
-				
-				<dd class="active"><a href="http://hirevegastech.com/?filter=all" class="current">All</a></dd>
-				
-				<dd><a href="http://hirevegastech.com/?filter=design">Design</a></dd>
-				
-				<dd><a href="http://hirevegastech.com/?filter=programming">Programming</a></dd>
-				
-				<dd><a href="http://hirevegastech.com/?filter=information-tech">I.T.</a></dd>
-				
-				<dd><a href="http://hirevegastech.com/?filter=engineering">Engineering</a></dd>
-				
-				<dd><a href="http://hirevegastech.com/?filter=other">Other</a></dd>
-
-				<!-- <dd id="search-jobs"><input type="text" class="small input-text" name="search" placeholder="Search jobs" id="search-jobs-input"></dd> -->
-				
-			</dl>
-		
-		</form>
-	
-	</div> 	
-</div> 
+ 
 <div id="job-list">
 
 	<ul>

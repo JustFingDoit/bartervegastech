@@ -29,7 +29,7 @@
 							<div class="seven columns">
 							
 															
-								<h2><span>New job:</span> Versogroup</h2>
+								<h2><span>New job:</span> ${user.username}</h2>
 								
 								<p>Posts stay active for 45 days from the day they are posted. <br><span class="req">*</span> required.</p>
 								
@@ -79,10 +79,10 @@
 								<div class="six columns">
 								
 									<label for="profile-company">Username <span class="req">*</span></label>
-									<input class="expand input-text" id="profile-company" name="company" placeholder="username" value="Versogroup" maxlength="50" required="required" type="text">
+									<input class="expand input-text" id="profile-company" name="company" placeholder="username" value="${user.username}" maxlength="50" required="required" type="text">
 																		
 									<label for="profile-website">Website URL <span class="req">*</span></label>
-									<input class="expand input-text" id="profile-website" name="website" placeholder="e.g. mysite.com" value="www.versogroup.com" maxlength="100" required="required" type="text">
+									<input class="expand input-text" id="profile-website" name="website" placeholder="e.g. mysite.com" value="www.mysite.com" maxlength="100" required="required" type="text">
 																		
 									<label for="profile-tagline">Tag line or motto</label>
 									<textarea name="tagline" id="profile-tagline" placeholder="ie. We make advanced web applications for the masses!" rows="3"></textarea>
