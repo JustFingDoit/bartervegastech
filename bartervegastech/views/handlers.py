@@ -13,6 +13,7 @@ from pyramid.httpexceptions import HTTPNotFound
 #from bartervegastech.dbmodels.barterdb import get_player_ids, \
 #        get_poker_player_by_id
 from bartervegastech.dbmodels.barterdb import UserFactory, ListingFactory, CategoryFactory
+from bartervegastech.dbmodels.barterdb import OfferWantFactory
 #from bartervegastech.dbmodels.shirtsbyme import 
 
 import formencode
@@ -76,22 +77,46 @@ class Listing(object):
     category = ''
     title = ''
     url = ''
+    description = ''
+    inreturn = ''
+    
     
     def __init__(self, id, type, username, date, category, title):
         self.list_id = id
         self.title = title
         self.type = type
-        self.date = str(date)[10:]
+        self.date = str(date)[:10]
         self.category = category
         self.username = username
-        self.url = '/user/' + username + '/' + self.date + '/' + self.cleanwords(category) + \
-                '/' + self.cleanwords(title) 
+        self.url = '/user/' + type + '/' + username + '/' + self.date + '/' + cleanwords(category) + \
+                '/' + cleanwords(title) 
 
-    def cleanwords(self, thestring):
-        import re
-        return re.sub(r'/\s+/g', '-', thestring).lower()
+def cleanwords(thestring):
+    import re
+    return re.sub(r"\s+", '-', thestring).lower()
+    
 
-def get_listings(self, listings, listFactory):
+def match(offerwant, username, date, category, title):
+    '''Find a match for the listing that meets the criteria'''
+    userFactory = UserFactory()
+    user_id = userFactory.get_user_id(username)
+    listFactory = ListingFactory()
+    listings = listFactory.get_listings_match(offerwant, user_id)
+    for each in listings:
+        if title == cleanwords(each.title):
+            return each
+    return None
+
+def get_listing(listing_id):
+    listFactory = ListingFactory()
+    listing = listFactory.get_by_id(listing_id)
+    list = Listing(listing.id, listing.offerwant, listFactory.get_username(listing.user_id), 
+                          listing.created_on, listFactory.get_category(listing.id), listing.title)
+    list.description = listFactory.get_description(listing_id)
+    list.inreturn = listFactory.get_inreturn(listing_id)
+    return list
+
+def get_listings(listings, listFactory):
     lists = list()
     for each in listings:
         lists.append(Listing(each.id, each.offerwant, listFactory.get_username(each.user_id), 
@@ -111,7 +136,7 @@ class PageHandler(BaseHandler):
         self.log.debug("in home view")
         listFactory = ListingFactory()
         listings = listFactory.get_listings()
-        lists = get_listings(self, listings, listFactory)
+        lists = get_listings(listings, listFactory)
         return {'listings': lists}
         
     @action(renderer="about.mako")
@@ -281,14 +306,93 @@ class UserAccountHandler(LoggedInHandler):
         return HTTPFound(location = "/")
 
     @action(renderer="account.mako")
-    def account(self):
+    def account(self, form=None):
         listFactory = ListingFactory()
         listings = listFactory.get_listings_by_user_id(self.request.session['logged_in'])
-        active = get_listings(self, listings, listFactory)
+        active = get_listings(listings, listFactory)
         categs = CategoryFactory()
         userFactory = UserFactory()
         user = userFactory.get_by_id(self.request.session['logged_in'])
-        return{'active': active, 'categories': categs.list_categories(), 'user': user}
+        if form == None:
+            html = render('create_post.mako', {'categories': categs.list_categories()})
+            form = htmlfill.render(html, errors={})
+        return{'active': active, 'user': user, 'createpost' : form}
+
+    @action(renderer="message.mako", request_method='POST')
+    def remove(self):
+        id_ = self.request.matchdict.get('id')
+        to_remove = id_[0]
+        listFactory = ListingFactory() 
+        listing = listFactory.get_by_id(to_remove)
+        if listing.user_id == self.request.session['logged_in']:
+            #User has permission to delete
+            listFactory.remove(to_remove)
+            message = "Successfully removed."
+        else:
+            message = "You do not have permission to delete this."
+        return {'message': message}
+
+    @action(name='account', renderer="message.mako", request_method='POST')
+    def account_post(self):
+        if 'submit-btn' not in self.request.POST:
+            return self.account()
+        try:
+            form_result = OfferWantSchema().to_python(self.request.POST)
+        except formencode.Invalid, error:
+            form_result = error.value
+            form_errors = error.error_dict or {}
+            categs = CategoryFactory()
+            html = render('create_post.mako', {'categories': categs.list_categories()})
+            createform = htmlfill.render(html, defaults=form_result, errors=form_errors)
+            return self.account(form)
+        listFactory = ListingFactory()
+        user_id = self.request.session['logged_in']
+        listing = listFactory.create_listing(form_result['status'], 
+                                             user_id,  
+                                             form_result['title'])
+        offerwant = OfferWantFactory()
+        offer = 0
+        want = 0
+        if form_result['status'] == "offer":
+            offer = offerwant.create_offer(user_id,  
+                                           form_result['category'], form_result['description']).id
+            want = offerwant.create_want(user_id, 
+                                         0, form_result['inreturn']).id
+        elif form_result['status'] == "want":
+            offer = offerwant.create_offer(user_id, 
+                                           0, form_result['inreturn'])
+            want = offerwant.create_want(user_id, 
+                                         form_result['category'], form_result['description'])
+        listFactory.create_map(listing.id, offer.id)
+        listFactory.create_map(listing.id, want.id)
+        message = "Your post has been created!"
+        return {'message': message}
+
+    @action(renderer="info.mako")
+    def offer(self):
+        id_ = self.request.matchdict.get('id')
+        username = id_[0]
+        date = id_[1]
+        category = id_[2]
+        title = id_[3]
+        listing_id = match("offer", username, date, category, title).id
+        listing = get_listing(listing_id)
+        return {'listing': listing}
+        
+    @action(renderer="info.mako")
+    def want(self):
+        id_ = self.request.matchdict.get('id')
+        username = id_[0]
+        date = id_[1]
+        category = id_[2]
+        title = id_[3]
+        listing_id = match("want", username, date, category, title).id
+        print "\n\n\n"
+        print str(listing_id)
+        print "\n\n\n"
+        listing = get_listing(listing_id)
+        return {'listing': listing}
+        
 
     @action(name="add", renderer='add_user.mako')
     def add_user(self):
@@ -331,7 +435,7 @@ class UserSchema(Schema):
     confirm = validators.MinLength(6, not_empty=True)
     
     
-class OfferWant(Schema):
+class OfferWantSchema(Schema):
     '''Schema for creating an offer or want'''
     allow_extra_fields = True
     status = validators.MinLength(1, not_empty=True)
@@ -340,6 +444,6 @@ class OfferWant(Schema):
     description = validators.MinLength(3, not_empty=True)
     inreturn = validators.MinLength(3, not_empty=True)
     
-class Profile(Schema):
+class ProfileSchema(Schema):
     '''Schema for editing user profile'''
     allow_extra_fields = True

@@ -60,7 +60,7 @@
 	<ul>
 	
 	        %for listing in listings:
-					<li class="list-row" onclick="window.location='/${listing.type}/${listing.username}/${listing.date}/${listing.category}/${listing.title}/';">
+					<li class="list-row" onclick="window.location='${listing.url}';">
 			
 				<div class="row job-list-row hide-on-phones">
 				

@@ -379,11 +379,11 @@ class OfferWantFactory(BaseFactory):
         """Initialize factory"""
         BaseFactory.__init__(self, OfferWant)
 
-    def create_offer(self, category_id, offer):
+    def create_offer(self, user_id, category_id, offer):
         offer = OfferWant(user_id, category_id, "offer", offer)
         return self.add(offer)
     
-    def create_want(self, category, want):
+    def create_want(self, user_id, category_id, want):
         want = OfferWant(user_id, category_id, "want", want)
         return self.add(want)
         
@@ -416,6 +416,23 @@ class ListingFactory(BaseFactory):
     def __init__(self):
         """Initialize factory"""
         BaseFactory.__init__(self, Listing)
+        
+    def create_listing(self, offerwant, user_id, title):
+        listing = Listing(offerwant, user_id, title)
+        return self.add(listing)
+    
+    def create_map(self, listing_id, offerwant_id):
+        map = ListingMap(listing_id, offerwant_id)
+        try:
+            session.add(map)
+            session.flush()
+            id_ = map.id
+            transaction.commit()
+        except IntegrityError:
+            logger.critical('Error adding object %s' % map)
+            session.rollback()
+            raise
+        return id_
     
     def get_listings_by_type(offerwant):
         '''
@@ -426,6 +443,9 @@ class ListingFactory(BaseFactory):
         #for each in listings:
         #    listing = self.filter_by(id=each.id).scalar()
         return listings
+    
+    def get_listings_match(self, type, userid):
+        return self.filter_by(offerwant=type).filter_by(user_id=userid).all()
             
     def get_listings_by_user_id(self, id):
         '''
@@ -448,18 +468,65 @@ class ListingFactory(BaseFactory):
         '''
             Returns the username from the user_id
         '''
-        return session.query(USER_ACCOUNT).get(user_id)
+        #listing = self.get_by_id(user_id)
+        return session.query(UserAccount).get(user_id).username
+    
+    def get_offerwant(self, id):
+        #First figure out if it's offer or want
+        listing = self.get_by_id(id)
+        map = session.query(ListingMap).filter_by(listing_id=listing.id).all()
+        offerwantFactory = OfferWantFactory()
+        offerwant_id = 0
+        for each in map:
+            if offerwantFactory.get_by_id(each.offerwant_id).offerwant == listing.offerwant:
+                offerwant_id = each.offerwant_id
+                break
+        else:
+            return None
+        #Then get category for the associated offerwant
+        return session.query(OfferWant).get(offerwant_id)
     
     def get_category(self, id):
         '''
             Using listing_id get the category
         '''
-        #First figure out if it's offer or want
-        listing = self.get_by_id(id)
-        offerwant_id = session.query(ListingMap).filter_by(listing_id=listing.id).offerwant_id
-        #Then get category for the associated offerwant
-        offerwant = session.query(OfferWant).get(offerwant_id)
+        offerwant = self.get_offerwant(id)
         if offerwant != None:
             return session.query(Category).get(offerwant.category_id).category
         return None
+    
+    def get_description(self, id):
+        '''
+            Get description of a listing by id
+        '''
+        offerwant = self.get_offerwant(id)
+        if offerwant != None:
+            return offerwant.description
+        return None
         
+    def get_inreturn(self, id):
+        listing = self.get_by_id(id)
+        map = session.query(ListingMap).filter_by(listing_id=listing.id).all()
+        offerwantFactory = OfferWantFactory()
+        offerwant_id = 0
+        for each in map:
+            if offerwantFactory.get_by_id(each.offerwant_id).offerwant != listing.offerwant:
+                offerwant_id = each.offerwant_id
+                break
+        else:
+            return None
+        #Then get category for the associated offerwant
+        offerwant = session.query(OfferWant).get(offerwant_id)
+        if offerwant != None:
+            return offerwant.description
+        return None
+    
+    def remove(self, id):
+        self.delete(id)
+        map = session.query(ListingMap).filter_by(listing_id=id).all()
+        for each in map:
+            offerwant = session.query(OfferWant).get(each.offerwant_id)
+            session.delete(offerwant)
+            session.delete(each)
+            session.flush()
+            transaction.commit()
