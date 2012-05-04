@@ -1,0 +1,39 @@
+/**************************************************/
+/**************************************************/
+/*************** BARTERVEGASTECH.COM **************/
+/**************************************************/
+/**************************************************/
+/**** SUPPORT THE LAS VEGAS TECH STARTUP SCENE ****/
+/************ ON TWITTER: #VegasTech **************/
+/****** SUPPORT #VEGASTECH AT VEGASTECH.COM *******/
+/**************************************************/
+/**************************************************/
+
+/* humanstxt.org */
+
+/* TEAM */
+	Designer: Geoff Sanders
+	Site: http://www.geoffsanders.com
+	Twitter: @geoffsanders
+	Location: Las Vegas, NV
+	Developer: Yo Sub Kwon
+	Site: http://www.jchysk.com
+	Twitter: @jchysk
+	Location: Las Vegas, NV
+	
+/* THANKS (FREE & OPEN SOURCE SOFTWARE USED) */
+	Python: http://www.php.net
+	Pyramid: http://www.pylonsproject.org/
+	MySQL: http://mysql.com
+	Nginx: http://nginx.com
+	jQuery: http://www.jquery.com
+	ZURB Foundation: http://foundation.zurb.com/
+	Modernizr: http://modernizr.com
+	Conditional Stylesheets: http://paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/
+
+/* SITE */
+	Standards: HTML5, CSS3
+	Doctype: HTML5
+	Language: English
+	Components: jQuery, Orbit, Reveal, ZURB Foundation
+	Software: TextWrangler, Photoshop

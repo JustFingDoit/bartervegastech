@@ -11,7 +11,7 @@
 		
 			<div id="topper" class="twelve columns">
 			
-				<span><strong>The next great tech city</strong> is seeking <strong>the next great tech talent</strong>... <em>is that you</em>?</span>
+				<span><strong>Hooray for trading things!</strong></span>
 			
 			</div> 		
 		</div> 	
@@ -81,7 +81,7 @@
 				</div> 				
 								<div id="sponsor-notice">
 				
-					<p>Want to see your company logo or advertisement here? <a href="mailto:info@hirevegastech.com" title="Email info@hirevegastech.com">Email us</a>.</p>
+					<p>Want to help cover hosting costs?<br />Send BTC to 13PB4zydRkeNLni7nSCBU2piMJsQFE8NEt</p>
 				
 				</div> 				
 			</div> 		

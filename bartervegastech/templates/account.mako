@@ -16,7 +16,7 @@
 				
 					<dd><a href="#jobstab" class="active" title="Create or edit job posts">Add Job</a></dd>
 					
-					<dd><a class="" href="#profiletab" title="Edit your company profile">Edit Profile</a></dd>
+					<dd><a class="" href="#profiletab" title="Edit your profile">Edit Profile</a></dd>
 					
 				</dl>
 				
@@ -68,42 +68,11 @@
 												
 												
 						<span class="req-guide"><span class="req">*</span> Required</span>
-						<h3>Edit company profile</h3>
+						<h3>Edit profile</h3>
 						
 						
 												
-						<form name="edit-profile" id="edit-profile-form" class="nice" method="post" action="">
-						
-							<div class="row">
-							
-								<div class="six columns">
-								
-									<label for="profile-company">Username <span class="req">*</span></label>
-									<input class="expand input-text" id="profile-company" name="company" placeholder="username" value="${user.username}" maxlength="50" required="required" type="text">
-																		
-									<label for="profile-website">Website URL <span class="req">*</span></label>
-									<input class="expand input-text" id="profile-website" name="website" placeholder="e.g. mysite.com" value="www.mysite.com" maxlength="100" required="required" type="text">
-																		
-									<label for="profile-tagline">Tag line or motto</label>
-									<textarea name="tagline" id="profile-tagline" placeholder="ie. We make advanced web applications for the masses!" rows="3"></textarea>
-									
-									<label for="profile-twitter">Twitter username</label>
-									<input class="expand input-text" id="profile-twitter" name="twitter" placeholder="ie. TwitterUser" maxlength="50" type="text">
-									
-								</div> 								
-								<div class="six columns">
-								
-									<label for="profile-address1">Description</label>
-									<textarea name="tagline" id="profile-tagline" placeholder="ie. We make advanced web applications for the masses!" rows="3"></textarea>
-									
-									<div id="edit-profile-submit-btns">
-									
-										<button type="submit" name="edit-profile-submit" id="edit-profile-submit" title="Update Profile" class="blue radius button nice">Update Profile</button>
-									
-									</div> 									
-								</div> 								
-							</div> 						
-						</form>
+						${profile | n}
 					
 					</li>
 					

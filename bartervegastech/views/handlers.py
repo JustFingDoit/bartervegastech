@@ -305,19 +305,6 @@ class UserAccountHandler(LoggedInHandler):
         del self.request.session['logged_in']
         return HTTPFound(location = "/")
 
-    @action(renderer="account.mako")
-    def account(self, form=None):
-        listFactory = ListingFactory()
-        listings = listFactory.get_listings_by_user_id(self.request.session['logged_in'])
-        active = get_listings(listings, listFactory)
-        categs = CategoryFactory()
-        userFactory = UserFactory()
-        user = userFactory.get_by_id(self.request.session['logged_in'])
-        if form == None:
-            html = render('create_post.mako', {'categories': categs.list_categories()})
-            form = htmlfill.render(html, errors={})
-        return{'active': active, 'user': user, 'createpost' : form}
-
     @action(renderer="message.mako", request_method='POST')
     def remove(self):
         id_ = self.request.matchdict.get('id')
@@ -332,10 +319,42 @@ class UserAccountHandler(LoggedInHandler):
             message = "You do not have permission to delete this."
         return {'message': message}
 
+    @action(renderer="account.mako")
+    def account(self):
+        listFactory = ListingFactory()
+        listings = listFactory.get_listings_by_user_id(self.request.session['logged_in'])
+        active = get_listings(listings, listFactory)
+        categs = CategoryFactory()
+        userFactory = UserFactory()
+        user = userFactory.get_by_id(self.request.session['logged_in'])
+        form = None
+        if self.request.session.get('createform') != None:
+            form = self.request.session['createform']
+            del self.request.session['createform']
+        if form == None:
+            html = render('create_post.mako', {'categories': categs.list_categories()})
+            form = htmlfill.render(html, errors={})
+        profile_form = render('profile.mako', {'user': user})
+        print "\n\n\n\nLogged in id"
+        print self.request.session['logged_in']
+        print "\n\n\n\n"
+        return{'active': active, 'user': user, 'createpost' : form, 'profile': profile_form}
+
     @action(name='account', renderer="message.mako", request_method='POST')
     def account_post(self):
+        if 'edit-profile-submit' in self.request.POST:
+            form_result = ProfileSchema().to_python(self.request.POST)
+            userFactory = UserFactory()
+            user = userFactory.get_by_id(self.request.session['logged_in'])
+            user.website = form_result['website']
+            user.tagline = form_result['tagline']
+            user.twitter = form_result['twitter']
+            user.description = form_result['description']
+            user.email_notification = form_result['emailnotification']
+            userFactory.update(user)
+            return HTTPFound(location="/account#profiletab")
         if 'submit-btn' not in self.request.POST:
-            return self.account()
+            return HTTPFound(location="/account")
         try:
             form_result = OfferWantSchema().to_python(self.request.POST)
         except formencode.Invalid, error:
@@ -344,7 +363,8 @@ class UserAccountHandler(LoggedInHandler):
             categs = CategoryFactory()
             html = render('create_post.mako', {'categories': categs.list_categories()})
             createform = htmlfill.render(html, defaults=form_result, errors=form_errors)
-            return self.account(form)
+            self.request.session['createform'] = createform
+            return HTTPFound(location='/account')
         listFactory = ListingFactory()
         user_id = self.request.session['logged_in']
         listing = listFactory.create_listing(form_result['status'], 
@@ -447,3 +467,10 @@ class OfferWantSchema(Schema):
 class ProfileSchema(Schema):
     '''Schema for editing user profile'''
     allow_extra_fields = True
+    username = validators.String()
+    website = validators.String()
+    tagline = validators.String()
+    twitter = validators.String()
+    description = validators.String()
+    emailnotification = validators.Bool()
+    

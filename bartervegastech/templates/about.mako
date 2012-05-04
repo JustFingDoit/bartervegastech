@@ -33,9 +33,8 @@
 			
 				<div class="panel hide-on-phones">
 					
-					<p class="big"><strong class="blue">Hire</strong>#<strong class="red">VegasTech</strong> is a <em>free</em>
- job board for designers, programmers, and other web or technology 
-professionals in Las Vegas, Nevada. Created for, and inspired by, the 
+					<p class="big"><strong class="blue">Barter</strong>#<strong class="red">VegasTech</strong> is a <em>free</em>
+ board for any person or company to trade abilities, services, or knowledge in Las Vegas, Nevada. Created for, and inspired by, the 
 amazing <a href="https://twitter.com/#%21/search/%23VegasTech" id="vt-hash-link" class="has-tip tip-top" data-width="180" title="Follow the #VegasTech hashtag on Twitter" target="_blank">#VegasTech</a> scene!</p>
 					
 				</div> 				

@@ -12,12 +12,12 @@
 		
 			<div id="users-feature" class="eleven columns hide-on-phones">
 			
-				<span id="users-feature-line" class="hide-on-phones"><strong>Hire</strong> designers, programmers, engineers, internet technology pros, web developers, UI/UX designers, graphic artists, and other <a href="https://twitter.com/#%21/search/%23VegasTech" id="vt-hash-link-users" class="has-tip tip-top" data-width="180" title="Follow the #VegasTech hashtag on Twitter" target="_blank">#VegasTech</a> talent! It's <strong class="blue">easy</strong> and <strong class="red">free</strong>!</span>
+				<span id="users-feature-line" class="hide-on-phones"><strong>Barter</strong> with people, startups, and other entities to make the most of the <a href="https://twitter.com/#%21/search/%23VegasTech" id="vt-hash-link-users" class="has-tip tip-top" data-width="180" title="Follow the #VegasTech hashtag on Twitter" target="_blank">#VegasTech</a> talent! It's <strong class="blue">easy</strong> and <strong class="red">free</strong>!</span>
 			
 			</div> 			
 			<div id="users-feature-mobile" class="eleven columns show-on-phones">
 			
-				<span id="users-feature-line-mobile" class="show-on-phones hide-on-desktops"><strong>Hire</strong> designers, programmers, engineers, internet technology pros, web developers, UI/UX designers, graphic artists, and other <a style="" href="https://twitter.com/#%21/search/%23VegasTech" id="vt-hash-link-users" class="has-tip tip-top" data-width="180" title="Follow the #VegasTech hashtag on Twitter" target="_blank">#VegasTech</a> talent! It's <strong class="blue">easy</strong> and <strong class="red">free</strong>!</span>
+				<span id="users-feature-line-mobile" class="show-on-phones hide-on-desktops"><strong>Barter</strong> with people, startups, and other entities to make the most of the <a href="https://twitter.com/#%21/search/%23VegasTech" id="vt-hash-link-users" class="has-tip tip-top" data-width="180" title="Follow the #VegasTech hashtag on Twitter" target="_blank">#VegasTech</a> talent! It's <strong class="blue">easy</strong> and <strong class="red">free</strong>!</span>
 				
 			</div>
 			
@@ -37,7 +37,7 @@
 			
 				<div class="panel">
 				
-					<h3>3 reasons to post your job on Hire#VegasTech</h3>
+					<h3>3 reasons to post here on Barter#VegasTech</h3>
 					
 					<ul>
 					
@@ -54,10 +54,9 @@ turn Las Vegas into <a href="http://downtownproject.com/" title="See how the CEO
 						
 						<li class="baby-icon">
 						
-							<h5>Posting a job doesn't get easier than this</h5>
+							<h5>Posting doesn't get easier than this</h5>
 							
-							<p>We made it quick and easy - just register your company or 
-startup once and post up to 25 job openings at a time. They stay active 
+							<p>We made it quick and easy - just register and post. They stay active 
 for 45 days and can be deactivated whenever you want.</p>
 						
 						</li>
@@ -66,7 +65,7 @@ for 45 days and can be deactivated whenever you want.</p>
 						
 							<h5>Did we mention it was free?</h5>
 							
-							<p>Some job boards charge up to $200 for a single post! Need we say more?</p>
+							<p>Need we say more?</p>
 						
 						</li>
 					

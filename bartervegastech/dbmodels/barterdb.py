@@ -109,6 +109,11 @@ class UserAccount(Base1, BaseObject):
     email = Column(Text)
     activation = Column(Text)
     forgot = Column(Text)
+    website = Column(Text)
+    tagline = Column(Text)
+    twitter = Column(Text)
+    description = Column(Text)
+    email_notification = Column(Boolean)
     pwd_context = CryptContext(
         #replace this list with the hash(es) you wish to support.
         schemes=[ "bcrypt" ],
@@ -122,6 +127,7 @@ class UserAccount(Base1, BaseObject):
         self.email = email
         self.activation = generate_password()
         self.forgot = 0
+        self.email_notification = 1
 
     def password(self):
         '''

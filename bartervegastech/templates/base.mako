@@ -133,7 +133,7 @@ $(function(){
 </script>
 
 
-<span style="top: 83.05px; left: 955.5px; width: 180px;" data-id="foundationTooltip0" class="tooltip tip-top">Follow the #VegasTech hashtag on Twitter<span style="top: auto; bottom: -10px; left: auto; right: auto;" class="nub"></span></span><span style="top: -54px; left: 0px; width: 180px;" data-id="foundationTooltip1" class="tooltip tip-top">Follow the #VegasTech hashtag on Twitter<span style="top: auto; bottom: -10px; left: auto; right: auto;" class="nub"></span></span><span style="top: 355.017px; left: 717.5px; width: 200px;" data-id="foundationTooltip2" class="tooltip tip-top">See how the CEO of Zappos is transforming Las Vegas<span style="top: auto; bottom: -10px; left: auto; right: auto;" class="nub"></span></span><span style="top: 828.933px; left: 410.5px; width: 180px;" data-id="foundationTooltip3" class="tooltip tip-top">Follow Geoff on Twitter<span style="top: auto; bottom: -10px; left: auto; right: auto;" class="nub"></span></span>
+
 
 </body>
 
@@ -188,7 +188,8 @@ $(function(){
 			
 			<br>
 			
-			<span id="created-by">Created by <a href="http://twitter.com/GeoffSanders" class="has-tip tip-top" data-width="180" title="Follow Geoff on Twitter" target="_blank">@GeoffSanders</a></span>
+			<span id="created-by">Designed by <a href="http://twitter.com/GeoffSanders" class="has-tip tip-top" data-width="180" title="Follow Geoff on Twitter" target="_blank">@GeoffSanders</a></span>
+			<span id="created-by">Coded by <a href="http://twitter.com/jchysk" class="has-tip tip-top" data-width="180" title="Follow Yo Sub on Twitter" target="_blank">@jchysk</a></span>
 		
 		</div> 		
 		<div id="footer-center" class="six columns hide-on-phones">
@@ -198,12 +199,18 @@ $(function(){
 				<li><a href="/" title="Home">Home</a></li>
 				
 				<li><a href="/about" title="About Barter #VegasTech">About</a></li>
-				
+%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
+
+					<li><a href="/account" title="User Section">Account</a></li>
+					
+					<li><a href="/user/logout" title="Logout">Logout</a></li>
+
+%else:				
 								
 					<li><a href="/users" title="User Section">Users</a></li>
 					
 					<li><a href="#" data-reveal-id="login-modal" data-animation="fade" title="Contact Us">Login</a></li>
-					
+%endif					
 								
 			</ul>
 		
@@ -214,7 +221,7 @@ $(function(){
 			
 			<div id="footer-support-logos">
 			
-				<span id="footer-humanstxt"><a href="http://BarterVegasTech.com/humans.txt" title="View our Humans.txt file" target="_blank"></a></span>
+				<span id="footer-humanstxt"><a href="/humans.txt" title="View our Humans.txt file" target="_blank"></a></span>
 				
 				<span id="footer-html5"><a href="http://www.w3.org/html/logo/" title="Support &amp; Spread HTML5" target="_blank"></a></span>
 			
