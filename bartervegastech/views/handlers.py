@@ -446,10 +446,10 @@ class UserAccountHandler(LoggedInHandler):
             offer = offerwant.create_offer(user_id,  
                                            form_result['category'], form_result['description'])
             want = offerwant.create_want(user_id, 
-                                         0, form_result['inreturn'])
+                                         13, form_result['inreturn'])
         elif form_result['status'] == "want":
             offer = offerwant.create_offer(user_id, 
-                                           0, form_result['inreturn'])
+                                           13, form_result['inreturn'])
             want = offerwant.create_want(user_id, 
                                          form_result['category'], form_result['description'])
         listFactory.create_map(listing.id, offer.id)
