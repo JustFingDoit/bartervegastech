@@ -63,7 +63,28 @@
 				
 					<p>${listing.inreturn}</p>
 				
-				</div> 			
+				</div>
+				%for each in replies:
+				<div id="reply" class="panel">
+				
+					<h5>${each.user.username}:</h5>
+				
+					<p>${each.description}</p>
+				
+				</div>
+				%endfor
+				%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
+				<div id="job-reply" class="panel">
+				
+					<h5>Reply</h5>
+					
+					<form name='reply' action='' method='post'>
+					<p><textarea name='description' class='expand' rows='10'>Your reply</textarea></p>
+					<p><button type="submit" name="reply" id="job-submit-btn" class="nice blue radius button">Reply</button></p>
+					
+					</form>
+				</div>
+				%endif 			
 			</div> 			
 			<div id="job-sidebar" class="three columns">
 			
@@ -85,16 +106,16 @@
 					<a href="#" title="Email" class="addthis_button_preferred_3 addthis_button_email at300b"><span class="at16nc at300bs at15nc at15t_email at16t_email"><span class="at_a11y">Share on email</span></span></a>
 					<a href="#" title="Print" class="addthis_button_preferred_4 addthis_button_print at300b"><span class="at16nc at300bs at15nc at15t_print at16t_print"><span class="at_a11y">Share on print</span></span></a>
 					<div class="atclear"></div></div>
-					<script type="text/javascript" src="infopage_files/addthis_widget.js"></script>
+					<script type="text/javascript" src="/js/addthis_widget.js"></script>
 					<!-- AddThis Button END -->
 				
 				</div> 			
 			</div> 		
 		</div> 	
 	</div> 
-<script src="infopage_files/modernizr.js"></script>­<style>@media (touch-enabled),(-webkit-touch-enabled),(-moz-touch-enabled),(-o-touch-enabled),(-ms-touch-enabled),(modernizr){#touch{top:9px;position:absolute}}</style>
-<script src="infopage_files/foundation.js"></script>
-<script src="infopage_files/app.js"></script>
+<script src="/js/modernizr.js"></script>­<style>@media (touch-enabled),(-webkit-touch-enabled),(-moz-touch-enabled),(-o-touch-enabled),(-ms-touch-enabled),(modernizr){#touch{top:9px;position:absolute}}</style>
+<script src="/js/foundation.js"></script>
+<script src="/js/app.js"></script>
 <script>
 $(function(){
 	$('#modal-login-link').click(function(e){

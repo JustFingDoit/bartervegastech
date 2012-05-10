@@ -23,6 +23,8 @@
 																		
 									<label for="howtoapply">And in return... <span class="req">*</span><span class="note">No HTML</span></label>
 									<textarea name="inreturn" id="howtoapply" class="expand" placeholder="What would you want or offer in return" rows="4" required="required"></textarea>
+									
+									<input type="checkbox" name="private" value="true" /> I'd like responses to be private.<br />
 																		
 									<div id="post-job-submit">
 									

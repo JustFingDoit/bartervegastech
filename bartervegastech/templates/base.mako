@@ -155,7 +155,7 @@ $(function(){
 			
 				<a href="#" id="nav-mobile-btn" data-reveal-id="nav-modal" data-animation="fade" class="small nice radius blue button show-on-phones">Nav</a>
 			
-				<a href="/" title="Home Page"><img src="/images/hire-vegas-tech-logo.png" alt="Hire #VegasTech Logo" title="Home" id="logo" class="hide-on-phones"><img src="/images/hire-vegas-tech-logo.png" alt="Hire #VegasTech Logo" title="Home" id="logo-mobile" class="show-on-phones"></a>
+				<a href="/" title="Home Page"><img src="/images/barter-vegas-tech-logo.png" alt="Hire #VegasTech Logo" title="Home" id="logo" class="hide-on-phones"><img src="/images/barter-vegas-tech-logo.png" alt="Hire #VegasTech Logo" title="Home" id="logo-mobile" class="show-on-phones"></a>
 				
 			</div> 			
 			<div id="navbar-links" class="eight columns hide-on-phones">
@@ -180,11 +180,7 @@ $(function(){
 	
 		<div id="footer-left" class="three columns hide-on-phones">
 		
-			<span id="copyright">©2012 <a href="http://BarterVegasTech.com/" title="BarterVegasTech.com">BarterVegasTech.com</a></span>
-			
-			<br>
-			
-			<span>All Rights Reserved</span>
+			<span id="copyright">A <a href="http://justfingdo.it/" title="Just F'ing Do it">Just F'ing Do It</a> Production</span>
 			
 			<br>
 			
@@ -217,7 +213,7 @@ $(function(){
 		</div> 		
 		<div id="footer-right" class="three columns hide-on-phones">
 		
-			<a href="/" title="Home"><img src="/images/hire-vegas-tech-footer-logo.png" alt="Hire #VegasTech Logo" id="footer-logo"></a>
+			<a href="/" title="Home"><img src="/images/barter-vegas-tech-logo.png" alt="Hire #VegasTech Logo" id="footer-logo"></a>
 			
 			<div id="footer-support-logos">
 			
@@ -233,7 +229,7 @@ $(function(){
 			
 			<br>
 		
-			<a href="/" title="Home"><img src="/images/hire-vegas-tech-footer-logo.png" alt="Hire #VegasTech Logo" id="footer-logo-mobile"></a>
+			<a href="/" title="Home"><img src="/images/barter-vegas-tech-logo.png" alt="Hire #VegasTech Logo" id="footer-logo-mobile"></a>
 			
 			<br>
 			

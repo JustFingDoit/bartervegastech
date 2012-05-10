@@ -4,6 +4,7 @@ from sqlalchemy import Column, ForeignKey, desc, func
 from sqlalchemy.types import Integer, String, Unicode, Boolean, DateTime, Text
 from sqlalchemy.types import SmallInteger
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import relationship, backref
 from bartervegastech.models import Base1, DBSession
 
 import datetime
@@ -114,6 +115,8 @@ class UserAccount(Base1, BaseObject):
     twitter = Column(Text)
     description = Column(Text)
     email_notification = Column(Boolean)
+    listings = relationship("Listing", backref="user")
+    replies = relationship("Reply", backref="user")
     pwd_context = CryptContext(
         #replace this list with the hash(es) you wish to support.
         schemes=[ "bcrypt" ],
@@ -182,14 +185,16 @@ class Listing(Base1, BaseObject):
     id = Column(Integer, primary_key=True)
     created_on = Column(DateTime)
     offerwant = Column(Text)
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('USER_ACCOUNT.id'))
     title = Column(Text)
+    private = Column(Boolean)
 
-    def __init__(self, offerwant, user_id, title):
+    def __init__(self, offerwant, user_id, title, private):
         self.created_on = datetime.datetime.now()    
         self.offerwant = offerwant
         self.user_id = user_id
         self.title = title
+        self.private = private
         
 class ListingMap(Base1, BaseObject):
     __tablename__ = 'listingsmap'
@@ -201,6 +206,17 @@ class ListingMap(Base1, BaseObject):
         self.listing_id = listing_id
         self.offerwant_id = offerwant_id
 
+class Reply(Base1, BaseObject):
+    __tablename__ = 'replies'
+    id = Column(Integer, primary_key=True)
+    listing_id = Column(Integer, ForeignKey('listings.id'))
+    user_id = Column(Integer, ForeignKey('USER_ACCOUNT.id'))
+    description = Column(Text)
+    
+    def __init__(self, listingid, userid, description):
+        self.listing_id = listingid
+        self.user_id = userid
+        self.description = description
     
 class BaseFactory(object):
     '''
@@ -423,8 +439,8 @@ class ListingFactory(BaseFactory):
         """Initialize factory"""
         BaseFactory.__init__(self, Listing)
         
-    def create_listing(self, offerwant, user_id, title):
-        listing = Listing(offerwant, user_id, title)
+    def create_listing(self, offerwant, user_id, title, private):
+        listing = Listing(offerwant, user_id, title, private)
         return self.add(listing)
     
     def create_map(self, listing_id, offerwant_id):
@@ -439,6 +455,28 @@ class ListingFactory(BaseFactory):
             session.rollback()
             raise
         return id_
+    
+    def create_reply(self, listing_id, user_id, desc):
+        reply = Reply(listing_id, user_id, desc)
+        if reply is None:
+            raise Exception('None type object received')
+
+        id_ = None
+        try:
+            logger.debug('adding %s' % object_)
+            session.add(reply)
+            session.flush()
+            id_ = reply.id
+            transaction.commit()
+        except IntegrityError:
+            logger.critical('Error adding object %s' % object_)
+            session.rollback()
+            raise
+        return session.query(Reply).get(id_)
+    
+    def get_replies(self, listing_id):
+        replies = session.query(Reply).filter_by(listing_id=listing_id).all()
+        return replies
     
     def get_listings_by_type(offerwant):
         '''

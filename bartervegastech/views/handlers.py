@@ -48,7 +48,14 @@ def sendMail(request, msg, to, username='', confirm=''):
             "you may just ignore this email.\nThanks!\nBarterVegasTech.com"
         if request.registry.settings['testing'] != "true":
             mailer.send(message)
-        
+    elif msg == 'reply':
+        message = Message(sender="support@bartervegastech.com", recipients=[to], 
+                          subject="BarterVegasTech Reply")
+        message.body = "Hello!\n\n" + \
+            "You recieved a reply to your post: " + username + \
+            "\n\n" + confirm
+        if request.registry.settings['testing'] != "true":
+            mailer.send(message)
 
 class BaseHandler(object):
     '''
@@ -68,7 +75,7 @@ class BaseHandler(object):
         self.context = context
         
 
-class Listing(object):
+class ShowListing(object):
     
     list_id = 0
     type = ''
@@ -88,7 +95,7 @@ class Listing(object):
         self.date = str(date)[:10]
         self.category = category
         self.username = username
-        self.url = '/user/' + type + '/' + username + '/' + self.date + '/' + cleanwords(category) + \
+        self.url = '/' + type + '/' + username + '/' + self.date + '/' + cleanwords(category) + \
                 '/' + cleanwords(title) 
 
 def cleanwords(thestring):
@@ -110,7 +117,7 @@ def match(offerwant, username, date, category, title):
 def get_listing(listing_id):
     listFactory = ListingFactory()
     listing = listFactory.get_by_id(listing_id)
-    list = Listing(listing.id, listing.offerwant, listFactory.get_username(listing.user_id), 
+    list = ShowListing(listing.id, listing.offerwant, listFactory.get_username(listing.user_id), 
                           listing.created_on, listFactory.get_category(listing.id), listing.title)
     list.description = listFactory.get_description(listing_id)
     list.inreturn = listFactory.get_inreturn(listing_id)
@@ -119,7 +126,7 @@ def get_listing(listing_id):
 def get_listings(listings, listFactory):
     lists = list()
     for each in listings:
-        lists.append(Listing(each.id, each.offerwant, listFactory.get_username(each.user_id), 
+        lists.append(ShowListing(each.id, each.offerwant, listFactory.get_username(each.user_id), 
                           each.created_on, listFactory.get_category(each.id), each.title))
     return lists
 
@@ -242,6 +249,54 @@ class PageHandler(BaseHandler):
         else:
             message = "There was an error changing your password" 
         return {'message': message}
+    
+    @action(renderer="info.mako")
+    def offer(self):
+        id_ = self.request.matchdict.get('id')
+        username = id_[0]
+        date = id_[1]
+        category = id_[2]
+        title = id_[3]
+        list_match = match("offer", username, date, category, title)
+        listing_id = list_match.id
+        listing = get_listing(listing_id)
+        if 'reply' in self.request.POST:
+            description = self.request.POST['description']
+            ListingFactory().create_reply(listing_id, self.request.session['logged_in'], 
+                                          description)
+            #check to see if poster is to be notified by email
+            #if list_match not in self.request.session:
+            #    list_match = ListingFactory().get_by_id(listing_id)
+            if list_match.user.email_notification:
+                sendMail(self.request, "reply", list_match.user.email, listing.title, listing.url)
+        replies = list()
+        if not list_match.private or self.request.session.get('logged_in') == list_match.user.id: 
+            replies = ListingFactory().get_replies(listing_id)
+        return {'listing': listing, 'replies': replies}
+        
+    @action(renderer="info.mako")
+    def want(self):
+        id_ = self.request.matchdict.get('id')
+        username = id_[0]
+        date = id_[1]
+        category = id_[2]
+        title = id_[3]
+        list_match = match("want", username, date, category, title)
+        listing_id = list_match.id
+        listing = get_listing(listing_id)
+        if 'reply' in self.request.POST:
+            description = self.request.POST['description']
+            ListingFactory().create_reply(listing_id, self.request.session['logged_in'], 
+                                          description)
+            #check to see if poster is to be notified by email
+            #if list_match not in session:
+            #    list_match = ListingFactory().get_by_id(listing_id)
+            if list_match.user.email_notification:
+                sendMail(self.request, "reply", list_match.user.email, listing.title, listing.url)
+        replies = list()
+        if not list_match.private or self.request.session['logged_in'] == list_match.user.id: 
+            replies = ListingFactory().get_replies(listing_id)
+        return {'listing': listing, 'replies': replies}
 
 class LoggedInHandler(BaseHandler):
     '''
@@ -291,7 +346,7 @@ class UserAccountHandler(LoggedInHandler):
             if userFactory.verify_user(username, password):
                 self.request.session['logged_in'] = userFactory.get_user_id(username)
                 self.log.debug("Login succeeded")
-                return HTTPFound(location = "/")
+                return HTTPFound(location = "/account")
             self.log.debug("Login failed, but tried")
             message = "Login failed"
         self.log.debug('login view returning')
@@ -367,9 +422,8 @@ class UserAccountHandler(LoggedInHandler):
             return HTTPFound(location='/account')
         listFactory = ListingFactory()
         user_id = self.request.session['logged_in']
-        listing = listFactory.create_listing(form_result['status'], 
-                                             user_id,  
-                                             form_result['title'])
+        listing = listFactory.create_listing(form_result['status'], user_id,  
+                                             form_result['title'], form_result['private'])
         offerwant = OfferWantFactory()
         offer = 0
         want = 0
@@ -388,31 +442,10 @@ class UserAccountHandler(LoggedInHandler):
         message = "Your post has been created!"
         return {'message': message}
 
-    @action(renderer="info.mako")
-    def offer(self):
-        id_ = self.request.matchdict.get('id')
-        username = id_[0]
-        date = id_[1]
-        category = id_[2]
-        title = id_[3]
-        listing_id = match("offer", username, date, category, title).id
-        listing = get_listing(listing_id)
-        return {'listing': listing}
+
         
-    @action(renderer="info.mako")
-    def want(self):
-        id_ = self.request.matchdict.get('id')
-        username = id_[0]
-        date = id_[1]
-        category = id_[2]
-        title = id_[3]
-        listing_id = match("want", username, date, category, title).id
-        print "\n\n\n"
-        print str(listing_id)
-        print "\n\n\n"
-        listing = get_listing(listing_id)
-        return {'listing': listing}
-        
+    #@action("want" renderer="info.mako", request_method="POST")
+    #def 
 
     @action(name="add", renderer='add_user.mako')
     def add_user(self):
@@ -463,6 +496,7 @@ class OfferWantSchema(Schema):
     category = validators.Int()
     description = validators.MinLength(3, not_empty=True)
     inreturn = validators.MinLength(3, not_empty=True)
+    private = validators.Bool()
     
 class ProfileSchema(Schema):
     '''Schema for editing user profile'''
