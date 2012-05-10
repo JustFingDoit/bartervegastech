@@ -208,9 +208,11 @@ class PageHandler(BaseHandler):
             elif id_[0] == "activate":
                 userFactory = UserFactory()
                 if userFactory.activate(id_[1], id_[2]):
-                    message = "Your account has been successfully activated. You may now login"
+                    message = "Your account has been successfully activated. You may now login."
                 else:
                     message = "There was an error activating your account. It may already be active or username no longer exists."
+            elif id_[0] == "nonactive":
+                message = "Please activate your account with the url sent to your email address."
             elif id_[0] == "error":
                 message = "An unknown error occurred."
         return {'message': message}
@@ -320,6 +322,8 @@ class LoggedInHandler(BaseHandler):
             if not 'login' in request.path :
                 self.log.debug('not logged in raising exception')
                 raise HTTPFound(location="/users/login")
+        elif UserFactory().get_by_id(request.session['logged_in']).activation != 1:
+            raise HTTPFound(location="/message/nonactive")
 
     def delete(self):
         ''' delete the catalog found in matchdict's id'''
