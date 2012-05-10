@@ -54,11 +54,17 @@ ${self.head_tags()}
 		
 		<dd><a href="/about" title="About">About</a></dd>
 		
-				
+%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
+
+			<dd><a href="/account" title="users">Account</a></dd>
+%else:				
+
 			<dd><a href="/users" title="users">Members</a></dd>
+%endif
 			
 			<dd><a href="#" id="modal-login-link" title="Login">Login</a></dd>
-			
+		
+			<dd><a href="http://www.hirevegastech.com" title="HireVegasTech.com - Free job board for #VegasTech" target="_blank">HireVegasTech</a></dd>
 				
 	</dl>
 	
@@ -233,11 +239,15 @@ $(function(){
 			
 			<br>
 			
-			<span id="copyright-mobile">©2012 <a href="http://bartervegastech.com/" title="BarterVegasTech.com">BarterVegasTech.com</a></span>
+			<span id="copyright-mobile">A <a href="http://justfingdo.it/" title="Just F'ing Do it">Just F'ing Do It</a> Production</span>
 			
 			<br>
 			
-			<span id="created-by-mobile">Created by <a href="http://twitter.com/GeoffSanders" title="Follow Geoff on Twitter" target="_blank">@GeoffSanders</a></span>
+			<span id="created-by-mobile">Designed by <a href="http://twitter.com/GeoffSanders" title="Follow Geoff on Twitter" target="_blank">@GeoffSanders</a></span>
+			
+			<br>
+			
+			<span id="created-by-mobile">Coded by <a href="http://twitter.com/jchysk" title="Follow Geoff on Twitter" target="_blank">@jchysk</a></span>
 			
 			<br>
 			

@@ -119,9 +119,13 @@ $(function(){
 										
 						<li><a href="/account" title="Account" id="current">Account</a></li>
 						
+						<li><a href="http://www.hirevegastech.com" title="HireVegasTech.com - Free job board for #VegasTech" target="_blank" class="has-tip">Hire</a></li>
+						
 						<li><a href="/user/logout" title="Logout">Logout</a></li>
 %else:										
 						<li><a href="/users" title="User Section">Users</a></li>
+						
+						<li><a href="http://www.hirevegastech.com" title="HireVegasTech.com - Free job board for #VegasTech" target="_blank" class="has-tip">Hire</a></li>
 					
 						<li><a href="#" title="User Login" id="navbar-login-btn" data-reveal-id="login-modal" data-animation="fade" class="small button nice radius blue">Login</a></li>
 %endif
