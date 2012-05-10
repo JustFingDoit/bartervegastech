@@ -53,7 +53,8 @@ def sendMail(request, msg, to, username='', confirm=''):
                           subject="BarterVegasTech Reply")
         message.body = "Hello!\n\n" + \
             "You recieved a reply to your post: " + username + \
-            "\n\n" + confirm
+            "\n\nVisit " + confirm + " to view it.\n\n" + \
+            "To change your email notification settings visit http://www.bartervegastech.com/account#profiletab"
         if request.registry.settings['testing'] != "true":
             mailer.send(message)
 
@@ -76,6 +77,7 @@ class BaseHandler(object):
         
 
 class ShowListing(object):
+    from bartervegastech.dbmodels.barterdb import UserAccount
     
     list_id = 0
     type = ''
@@ -86,6 +88,7 @@ class ShowListing(object):
     url = ''
     description = ''
     inreturn = ''
+    user = object()
     
     
     def __init__(self, id, type, username, date, category, title):
@@ -95,6 +98,7 @@ class ShowListing(object):
         self.date = str(date)[:10]
         self.category = category
         self.username = username
+        self.user = UserFactory().get_user_by_username(username)
         self.url = '/' + type + '/' + username + '/' + self.date + '/' + cleanwords(category) + \
                 '/' + cleanwords(title) 
 
@@ -265,14 +269,16 @@ class PageHandler(BaseHandler):
             ListingFactory().create_reply(listing_id, self.request.session['logged_in'], 
                                           description)
             #check to see if poster is to be notified by email
-            #if list_match not in self.request.session:
-            #    list_match = ListingFactory().get_by_id(listing_id)
+            list_match = ListingFactory().get_by_id(listing_id)
             if list_match.user.email_notification:
                 sendMail(self.request, "reply", list_match.user.email, listing.title, listing.url)
         replies = list()
         if not list_match.private or self.request.session.get('logged_in') == list_match.user.id: 
             replies = ListingFactory().get_replies(listing_id)
-        return {'listing': listing, 'replies': replies}
+        elif self.request.session.get('logged_in') != None:
+            #get replies that user wrote
+            replies = ListingFactory().get_my_replies(self.request.session['logged_in'], listing_id)
+        return {'listing': listing, 'replies': replies, 'private': list_match.private}
         
     @action(renderer="info.mako")
     def want(self):
@@ -289,14 +295,16 @@ class PageHandler(BaseHandler):
             ListingFactory().create_reply(listing_id, self.request.session['logged_in'], 
                                           description)
             #check to see if poster is to be notified by email
-            #if list_match not in session:
-            #    list_match = ListingFactory().get_by_id(listing_id)
+            list_match = ListingFactory().get_by_id(listing_id)
             if list_match.user.email_notification:
                 sendMail(self.request, "reply", list_match.user.email, listing.title, listing.url)
         replies = list()
-        if not list_match.private or self.request.session['logged_in'] == list_match.user.id: 
+        if not list_match.private or self.request.session.get('logged_in') == list_match.user.id: 
             replies = ListingFactory().get_replies(listing_id)
-        return {'listing': listing, 'replies': replies}
+        elif self.request.session.get('logged_in') != None:
+            #get replies that user wrote
+            replies = ListingFactory().get_my_replies(self.request.session['logged_in'], listing_id)
+        return {'listing': listing, 'replies': replies, 'private': list_match.private}
 
 class LoggedInHandler(BaseHandler):
     '''

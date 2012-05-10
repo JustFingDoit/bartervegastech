@@ -75,9 +75,11 @@
 				%endfor
 				%if request.session.get('logged_in') != None and request.session.get('logged_in') >= 0:
 				<div id="job-reply" class="panel">
-				
-					<h5>Reply</h5>
-					
+				%if private:
+					<h5>Private Reply - you should let them know how to contact you</h5>
+				%else:
+					<h5>Reply - If necessary you should let them know how to contact you</h5>
+				%endif					
 					<form name='reply' action='' method='post'>
 					<p><textarea name='description' class='expand' rows='10'>Your reply</textarea></p>
 					<p><button type="submit" name="reply" id="job-submit-btn" class="nice blue radius button">Reply</button></p>
@@ -89,10 +91,18 @@
 			<div id="job-sidebar" class="three columns">
 			
 								<h6>${listing.username}</h6>
-			
-								
-								
-									<p>
+			%if listing.user.website != None and listing.user.website != 'None':
+									<p>Website: ${listing.user.website}</p>
+			%endif
+			%if listing.user.tagline != None and listing.user.tagline != 'None':					
+									<p>Tagline: ${listing.user.tagline}</p>
+			%endif
+			%if listing.user.twitter != None and listing.user.twitter != 'None':					
+									<p>Twitter: <a href='http://www.twitter.com/#/${listing.user.twitter}'>${listing.user.twitter}</a></p>
+			%endif
+			%if listing.user.description != None and listing.user.description != 'None':					
+									<p>Description: ${listing.user.description}</p>
+			%endif
 
 				<div id="job-post-share">
 					<strong>Share this:</strong>

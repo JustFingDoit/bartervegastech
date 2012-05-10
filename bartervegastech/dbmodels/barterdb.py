@@ -347,13 +347,19 @@ class UserFactory(BaseFactory):
         """List all the users"""
         return session.query(UserAccount).all()
     
-    def get_user_id(self, username):
-        """Gets user id from username"""
+    def get_user_by_username(self, username):
         try:
             user = self.filter_by(username = username).one()
         except:
             return None
-        return user.id
+        return user
+    
+    def get_user_id(self, username):
+        """Gets user id from username"""
+        user = self.get_user_by_username(username)
+        if user != None:
+            return user.id
+        return None
     
     def activate(self, username, activation_code):
         ''' Activates the user's account
@@ -463,19 +469,24 @@ class ListingFactory(BaseFactory):
 
         id_ = None
         try:
-            logger.debug('adding %s' % object_)
+            logger.debug('adding %s' % reply)
             session.add(reply)
             session.flush()
             id_ = reply.id
             transaction.commit()
         except IntegrityError:
-            logger.critical('Error adding object %s' % object_)
+            logger.critical('Error adding object %s' % reply)
             session.rollback()
             raise
         return session.query(Reply).get(id_)
     
     def get_replies(self, listing_id):
         replies = session.query(Reply).filter_by(listing_id=listing_id).all()
+        return replies
+    
+    def get_my_replies(self, user_id, listing_id):
+        replies = session.query(Reply).filter_by(listing_id=listing_id).filter_by(
+                                                user_id=user_id).all()
         return replies
     
     def get_listings_by_type(offerwant):
