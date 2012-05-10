@@ -322,8 +322,11 @@ class LoggedInHandler(BaseHandler):
             if not 'login' in request.path :
                 self.log.debug('not logged in raising exception')
                 raise HTTPFound(location="/users/login")
-        elif UserFactory().get_by_id(request.session['logged_in']).activation != 1:
-            raise HTTPFound(location="/message/nonactive")
+        else:
+            user = UserFactory().get_by_id(request.session['logged_in'])
+            if user.activation != '1':
+                if not 'login' in request.path and not 'logout' in request.path:
+                    raise HTTPFound(location="/message/nonactive")
 
     def delete(self):
         ''' delete the catalog found in matchdict's id'''

@@ -59,7 +59,8 @@ def root_factory(request):
 
 def populate():
     factory = UserFactory()
-    factory.create_user("administrator", "delight", "test@test.com")
+    user = factory.create_user("administrator", "delight", "test@test.com")
+    factory.activate(user.username, user.activation)
     categs = CategoryFactory()
     categs.create_category("Design")
     categs.create_category("Programming")
